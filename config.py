@@ -33,19 +33,20 @@ config_dir = "{}/etc/credentials".format(basedir)
 appsecret_dir = "{}/etc/appsecret".format(basedir)
 file_dir = [config_dir, appsecret_dir]
 
-# store configurations
-config = {}
-for file in file_dir:
-    config_file = open(file, "r")
-    config_parser = ConfigParser.ConfigParser()
-    config_parser.readfp(config_file)
-    for section in config_parser.sections():
-        for k, v in config_parser.items(section):
-            if k not in config:
-                config[k] = v
+if os.environ.get('HEROKU') is None:
+    # store configurations
+    config = {}
+    for file in file_dir:
+        config_file = open(file, "r")
+        config_parser = ConfigParser.ConfigParser()
+        config_parser.readfp(config_file)
+        for section in config_parser.sections():
+            for k, v in config_parser.items(section):
+                if k not in config:
+                    config[k] = v
 
-#for row in config:
-#    print str(config) + " : " + str(config[row])
+    #for row in config:
+    #    print str(config) + " : " + str(config[row])
 
 WTF_CSRF_ENABLED = True
 SECRET_KEY = config["app_secret"]
