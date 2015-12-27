@@ -49,7 +49,6 @@ if os.environ.get('HEROKU') is None:
     #    print str(config) + " : " + str(config[row])
 
 WTF_CSRF_ENABLED = True
-SECRET_KEY = config["app_secret"]
 
 OPENID_PROVIDERS = [
     {'name': 'Google', 'url': 'https://www.google.com/accounts/o8/id'},
@@ -76,6 +75,7 @@ DATABASE_QUERY_TIMEOUT = 0.5
 # email server
 # smtp.googlemail.com
 if os.environ.get('HEROKU') is not None:
+    SECRET_KEY = os.environ.get('app_secret')
     MAIL_SERVER = os.environ.get('SMTP_SERVER')
     MAIL_PORT = os.environ.get('SMTP_PORT')
     MAIL_USERNAME = os.environ.get('SMTP_USERNAME')
@@ -85,6 +85,7 @@ if os.environ.get('HEROKU') is not None:
     MS_TRANSLATOR_CLIENT_SECRET = os.environ.get('translator_secret')
     ADMINS = [os.environ.get('MAIL_DEFAULT_SENDER')]
 else:
+    SECRET_KEY = config["app_secret"]
     MAIL_SERVER = config['smtp_server']
     MAIL_PORT = config['smtp_port']
     MAIL_USERNAME = config['smtp_username']
