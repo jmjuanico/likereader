@@ -30,7 +30,6 @@ import json
 
 # get directories
 basedir = os.path.dirname(os.path.abspath(__file__))
-clientsecrets = json.loads(open("{}/etc/clientsecret.json".format(basedir)).read())
 config_dir = "{}/etc/credentials".format(basedir)
 appsecret_dir = "{}/etc/appsecret".format(basedir)
 file_dir = [config_dir, appsecret_dir]
@@ -101,6 +100,7 @@ if os.environ.get('HEROKU') is not None:
     }
 
 else:
+    clientsecrets = json.loads(open("{}/etc/clientsecret.json".format(basedir)).read())
     OAUTH_CREDENTIALS = clientsecrets
     SECRET_KEY = config["app_secret"]
     MAIL_SERVER = config['smtp_server']

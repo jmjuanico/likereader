@@ -2,17 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8155bd8f-1481-4c94-bd72-45a4548c51d8" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/oauth.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/base.html" afterPath="$PROJECT_DIR$/app/templates/base.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/index.html" afterPath="$PROJECT_DIR$/app/templates/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/login.html" afterPath="$PROJECT_DIR$/app/templates/login.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/post.html" afterPath="$PROJECT_DIR$/app/templates/post.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views.py" afterPath="$PROJECT_DIR$/app/views.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config.py" afterPath="$PROJECT_DIR$/config.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_repository/versions/006_migration.py" afterPath="$PROJECT_DIR$/db_repository/versions/006_migration.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/requirements.txt" afterPath="$PROJECT_DIR$/requirements.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/run.py" afterPath="$PROJECT_DIR$/run.py" />
     </list>
     <ignored path="blogapp.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -36,8 +26,8 @@
       <file leaf-file-name="config.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/config.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.7413793">
-              <caret line="97" column="39" selection-start-line="97" selection-start-column="30" selection-end-line="97" selection-end-column="39" />
+            <state vertical-scroll-proportion="0.7435345">
+              <caret line="106" column="35" selection-start-line="106" selection-start-column="35" selection-end-line="106" selection-end-column="35" />
               <folding>
                 <element signature="e#1366#1375#0" expanded="true" />
               </folding>
@@ -113,7 +103,7 @@
         <entry file="file://$PROJECT_DIR$/tmp/microblog.log">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="1459" column="21" selection-start-line="1459" selection-start-column="21" selection-end-line="1459" selection-end-column="21" />
+              <caret line="1460" column="21" selection-start-line="1460" selection-start-column="21" selection-end-line="1460" selection-end-column="21" />
               <folding />
             </state>
           </provider>
@@ -197,11 +187,11 @@
         <option value="$PROJECT_DIR$/db_repository/versions/006_migration.py" />
         <option value="$PROJECT_DIR$/etc/credentials" />
         <option value="$PROJECT_DIR$/etc/clientsecret.json" />
-        <option value="$PROJECT_DIR$/config.py" />
         <option value="$PROJECT_DIR$/app/views.py" />
         <option value="$PROJECT_DIR$/run.py" />
         <option value="$PROJECT_DIR$/app/templates/login.html" />
         <option value="$PROJECT_DIR$/app/oauth.py" />
+        <option value="$PROJECT_DIR$/config.py" />
       </list>
     </option>
   </component>
@@ -1023,7 +1013,7 @@
     <entry file="file://$PROJECT_DIR$/tmp/microblog.log">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="1459" column="21" selection-start-line="1459" selection-start-column="21" selection-end-line="1459" selection-end-column="21" />
+          <caret line="1460" column="21" selection-start-line="1460" selection-start-column="21" selection-end-line="1460" selection-end-column="21" />
           <folding />
         </state>
       </provider>
@@ -1087,8 +1077,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/config.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7413793">
-          <caret line="97" column="39" selection-start-line="97" selection-start-column="30" selection-end-line="97" selection-end-column="39" />
+        <state vertical-scroll-proportion="0.7435345">
+          <caret line="106" column="35" selection-start-line="106" selection-start-column="35" selection-end-line="106" selection-end-column="35" />
           <folding>
             <element signature="e#1366#1375#0" expanded="true" />
           </folding>
