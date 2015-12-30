@@ -8,7 +8,7 @@
             {% autoescape false %}
             <p>{{ _('%(nickname)s said %(when)s:', nickname='<a href="%s">%s</a>' % (url_for('user', nickname=post.author.nickname), post.author.nickname), when=momentjs(post.timestamp).fromNow()) }}</p>
             {% endautoescape %}
-            <p><strong><span id="post{{ post.id }}">{{ post.body }}</span></strong></p>
+            <p><span id="post{{ post.id }}">{{ post.body }}</span></p>
             {% if post.language != None and post.language != '' and post.language != g.locale %}
             <div>
                 <span id="translation{{ post.id }}">
@@ -21,6 +21,13 @@
             {% if post.author.id == g.user.id %}
             <div><a href="{{ url_for('delete', id=post.id) }}">{{ _('Delete') }}</a></div>
             {% endif %}
+
+              <div
+              class="fb-like"
+              data-share="true"
+              data-width="450"
+              data-show-faces="true">
+            </div>
 
         </td>
     </tr>

@@ -9,12 +9,15 @@
             {{ form.hidden_tag() }}
             <div class="control-group{% if form.post.errors %} error{% endif %}">
                 <label class="control-label" for="post">{{ _('Say something:') }}</label>
+
                 <div class="controls">
-                    {{ form.post(size=30, maxlength=140) }}
+                    <!--{{ form.post(size=1000, maxlength=2000) }}-->
+                    <textarea id="post" name="post"rows="5" cols="10"></textarea>
                     {% for error in form.post.errors %}
                         <span class="help-inline">[{{ error }}]</span><br>
                     {% endfor %}
                 </div>
+
             </div>
             <div class="control-group">
                 <div class="controls">

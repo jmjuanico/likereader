@@ -19,6 +19,8 @@ MarkupSafe==0.23
 pbr==0.10.0
 python-openid==2.2.5
 pytz==2014.7
+rauth==0.7.2
+requests==2.9.1
 six==1.8.0
 speaklater==1.3
 SQLAlchemy==0.9.7
@@ -29,4 +31,3 @@ Werkzeug==0.9.6
 wheel==0.24.0
 Whoosh==2.6.0
 WTForms==2.0.1
-psycopg2==2.5.4

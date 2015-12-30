@@ -23,7 +23,11 @@
             <div class="help-block">{{ _('Click on your OpenID provider below:') }}</div>
             <div class="control-group">
                 {% for pr in providers %}
-                <a href="javascript:set_openid('{{ pr.url }}', '{{ pr.name }}');"><img src="/static/img/{{ pr.name.lower() }}.png" class="img-polaroid" style="margin:2px;" /></a>
+                    {% if not pr['url'].startswith('http') %}
+                        <a href="{{ url_for('oauth_authorize', provider=pr.name.lower()) }}"><img src="/static/img/{{ pr.name.lower() }}.png" class="img-polaroid" style="margin:2px;" /></a>
+                    {% else %}
+                        <a href="javascript:set_openid('{{ pr.url }}', '{{ pr.name }}');"><img src="/static/img/{{ pr.name.lower() }}.png" class="img-polaroid" style="margin:2px;" /></a>
+                    {% endif %}
                 {% endfor %}
             </div>
             <div class="control-group{% if form.openid.errors %} error{% endif %}">

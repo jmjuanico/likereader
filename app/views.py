@@ -9,11 +9,12 @@ from .emails import follower_notification
 from guess_language import guessLanguage
 from flask.ext.babel import gettext
 from app import babel
-from config import LANGUAGES
+from config import LANGUAGES, PROVIDERS
 from flask import jsonify
 from .translate import microsoft_translate
 from flask.ext.sqlalchemy import get_debug_queries
 from config import DATABASE_QUERY_TIMEOUT
+from oauth import OAuthSignIn
 
 @app.route('/login', methods=['GET', 'POST'])
 @oid.loginhandler
@@ -27,7 +28,7 @@ def login():
     return render_template('login.html',
                            title='Sign In',
                            form=form,
-                           providers=app.config['OPENID_PROVIDERS'])
+                           providers=PROVIDERS)
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
@@ -86,7 +87,6 @@ def after_login(resp):
     login_user(user, remember=remember_me)
     return redirect(request.args.get('next') or url_for('index'))
 
-
 # The current_user global is set by Flask-Login, so we just put a copy in
 # the g object to have better access to it. With this, all requests will
 # have access to the logged in user, even inside templates.
@@ -99,7 +99,6 @@ def before_request():
         db.session.commit()
         g.search_form = SearchForm()
     g.locale = get_locale()
-
 
 # This will record queries that are running too long based on the query timeout config
 # result will be added in the logger
@@ -241,4 +240,29 @@ def delete(id):
     db.session.delete(post)
     db.session.commit()
     flash('Your post has been deleted.')
+    return redirect(url_for('index'))
+
+
+@app.route('/authorize/<provider>')
+def oauth_authorize(provider):
+    if not current_user.is_anonymous:
+        return redirect(url_for('index'))
+    oauth = OAuthSignIn.get_provider(provider)
+    return oauth.authorize()
+
+@app.route('/callback/<provider>')
+def oauth_callback(provider):
+    if not current_user.is_anonymous:
+        return redirect(url_for('index'))
+    oauth = OAuthSignIn.get_provider(provider)
+    social_id, username, email = oauth.callback()
+    if social_id is None:
+        flash('Authentication failed.')
+        return redirect(url_for('index'))
+    user = User.query.filter_by(social_id=social_id).first()
+    if not user:
+        user = User(social_id=social_id, nickname=username, email=email)
+        db.session.add(user)
+        db.session.commit()
+    login_user(user, True)
     return redirect(url_for('index'))

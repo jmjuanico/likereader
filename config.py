@@ -26,9 +26,11 @@ if it doesnt compile and returns fuzzy flag then use this below
 
 import os
 import ConfigParser
+import json
 
 # get directories
 basedir = os.path.dirname(os.path.abspath(__file__))
+clientsecrets = json.loads(open("{}/etc/clientsecret.json".format(basedir)).read())
 config_dir = "{}/etc/credentials".format(basedir)
 appsecret_dir = "{}/etc/appsecret".format(basedir)
 file_dir = [config_dir, appsecret_dir]
@@ -45,17 +47,19 @@ if os.environ.get('HEROKU') is None:
                 if k not in config:
                     config[k] = v
 
-    #for row in config:
-    #    print str(config) + " : " + str(config[row])
+# for row in config:
+#     print str(config) + " : " + str(config[row])
 
 WTF_CSRF_ENABLED = True
 
-OPENID_PROVIDERS = [
+PROVIDERS = [
     {'name': 'Google', 'url': 'https://www.google.com/accounts/o8/id'},
     {'name': 'Yahoo', 'url': 'https://me.yahoo.com'},
     {'name': 'AOL', 'url': 'http://openid.aol.com/<username>'},
     {'name': 'Flickr', 'url': 'http://www.flickr.com/<username>'},
-    {'name': 'MyOpenID', 'url': 'https://www.myopenid.com'}]
+    {'name': 'MyOpenID', 'url': 'https://www.myopenid.com'},
+    {'name': 'Facebook', 'url': 'facebook'},
+    {'name': 'Twitter', 'url': 'twitter'}]
 
 # this is application database
 # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db')
@@ -84,7 +88,20 @@ if os.environ.get('HEROKU') is not None:
     MS_TRANSLATOR_CLIENT_ID = os.environ.get('translator_id')
     MS_TRANSLATOR_CLIENT_SECRET = os.environ.get('translator_secret')
     ADMINS = [os.environ.get('MAIL_DEFAULT_SENDER')]
+
+    OAUTH_CREDENTIALS = {
+    'facebook': {
+        'id': os.environ.get('FACEBOOKID'),
+        'secret': os.environ.get('FACEBOOKSECRET')
+    },
+    'twitter': {
+        'id': os.environ.get('TWITTERID'),
+        'secret': os.environ.get('TWITTERSECRET')
+    }
+    }
+
 else:
+    OAUTH_CREDENTIALS = clientsecrets
     SECRET_KEY = config["app_secret"]
     MAIL_SERVER = config['smtp_server']
     MAIL_PORT = config['smtp_port']
