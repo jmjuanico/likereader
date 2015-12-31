@@ -23,9 +23,10 @@ followers = db.Table('followers',
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    social_id = db.Column(db.String(64), nullable=True, unique=True)
     nickname = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
-    posts = db.relationship('Post', backref='author', lazy='dynamic')
+    posts = db.relationship('Post', backref='author', lazy='dynamic', order_by = 'Post.timestamp.desc()')
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime)
     followed = db.relationship('User',

@@ -245,20 +245,20 @@ def delete(id):
 
 @app.route('/authorize/<provider>')
 def oauth_authorize(provider):
-    if not current_user.is_anonymous:
+    if g.user is not None and g.user.is_authenticated:
         return redirect(url_for('index'))
     oauth = OAuthSignIn.get_provider(provider)
     return oauth.authorize()
 
 @app.route('/callback/<provider>')
 def oauth_callback(provider):
-    if not current_user.is_anonymous:
+    if g.user is not None and g.user.is_authenticated:
         return redirect(url_for('index'))
     oauth = OAuthSignIn.get_provider(provider)
     social_id, username, email = oauth.callback()
     if social_id is None:
         flash('Authentication failed.')
-        return redirect(url_for('index'))
+        return redirect(url_for('login'))
     user = User.query.filter_by(social_id=social_id).first()
     if not user:
         user = User(social_id=social_id, nickname=username, email=email)
