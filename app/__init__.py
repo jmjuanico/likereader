@@ -70,3 +70,29 @@ if os.environ.get('HEROKU') is not None:
 
 app.jinja_env.globals['momentjs'] = momentjs
 from app import views, models
+
+# make sure admin account is setup
+from models import User, Role, Permission
+
+@app.context_processor
+def inject_permissions():
+    return dict(Permission=Permission)
+
+# initialize roles
+Role.insert_roles()
+
+# add admin if not yet added
+admin_email = ADMINS[0]
+# this returns result object
+admin_user = User.query.filter_by(email=admin_email).first()
+# this returns object values
+admin_role = db.session.query(Role).filter(Role.permissions==Permission.ADMINISTER).first()
+
+if not admin_user:
+    user = User(nickname='admin', email=admin_email, role=admin_role)
+    db.session.add(user)
+    db.session.commit()
+
+    # follow yourself
+    db.session.add(user.follow(user))
+    db.session.commit()

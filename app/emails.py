@@ -26,3 +26,12 @@ def follower_notification(followed, follower):
                                user=followed, follower=follower),
                render_template("follower_email.html",
                                user=followed, follower=follower))
+
+def reply_notification(commentuser, replyuser, commenturl):
+    send_email("[microblog] %s has replied to your comment!" % replyuser.nickname,
+               ADMINS[0],
+               [commentuser.email],
+               render_template("reply_email.txt",
+                               commentuser=commentuser, replyuser=replyuser, commenturl=commenturl),
+               render_template("reply_email.html",
+                               commentuser=commentuser, replyuser=replyuser, commenturl=commenturl))

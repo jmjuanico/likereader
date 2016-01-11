@@ -25,6 +25,14 @@
     {% for post in posts.items %}
         {% include 'post.html' %}
     {% endfor %}
+
+    {% if pagination %}
+    {% import "macros.html" as macros %}
+    <div class="pagination">
+        {{ macros.pagination_widget(pagination, 'user',nickname=user.nickname) }}
+    </div>
+    {% endif %}
+<!--
     <ul class="pager">
         {% if posts.has_prev %}
         <li class="previous"><a href="{{ url_for('user', nickname=user.nickname, page=posts.prev_num) }}">{{ _('Newer posts') }}</a></li>
@@ -37,4 +45,5 @@
         <li class="next disabled"><a href="#">{{ _('Older posts') }}</a></li>
         {% endif %}
     </ul>
+-->
 {% endblock %}

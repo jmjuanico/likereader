@@ -1,0 +1,14 @@
+<p>Dear {{ commentuser.nickname }},</p>
+<p>{{ _('%(nickname)s has replied to your comment.', nickname=replyuser.nickname) }}</p>
+<p> <a href="{{ commenturl }}"> Click here to reply. </a></p>
+<table>
+    <tr valign="top">
+        <td><img src="{{ replyuser.avatar(50) }}"></td>
+        <td>
+            <a href="{{ url_for('user', nickname=replyuser.nickname, _external=True)}}">{{ replyuser.nickname }}</a><br />
+            {{ replyuser.about_me }}
+        </td>
+    </tr>
+</table>
+<p>{{ _('Regards,') }}</p>
+<p>{{ _('The <code>microblog</code> admin') }}</p>

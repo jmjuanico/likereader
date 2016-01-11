@@ -118,9 +118,11 @@ MAIL_USE_SSL = True
 
 # pagination
 POSTS_PER_PAGE = 5
+COMMENTS_PER_POST = 10
 
 WHOOSH_BASE = os.path.join(basedir, 'search.db')
 MAX_SEARCH_RESULTS = 50
+FLASKY_COMMENTS_PER_PAGE = 10
 
 LANGUAGES = {
     'en': 'English',

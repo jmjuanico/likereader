@@ -2,12 +2,12 @@
     <tr>
         <td width="70px"><a href="{{ url_for('user', nickname=post.author.nickname) }}"><img src="{{ post.author.avatar(70) }}" /></a></td>
         <td>
+            <p><h4><span id="post{{ post.id }}"><a href="{{ url_for('post', id = post.id) }}">{{ post.title }}</a></span></h4></p>
             <!--autoescape for the translation to work properly -->
-            <!--for control purposes added validations for the nickname -->
-            <!--translation may disrupt the links associated to the nickname -->
             {% autoescape false %}
             <p>{{ _('%(nickname)s said %(when)s:', nickname='<a href="%s">%s</a>' % (url_for('user', nickname=post.author.nickname), post.author.nickname), when=momentjs(post.timestamp).fromNow()) }}</p>
             {% endautoescape %}
+
             <p><span id="post{{ post.id }}">{{ post.body }}</span></p>
             {% if post.language != None and post.language != '' and post.language != g.locale %}
             <div>
@@ -21,14 +21,6 @@
             {% if post.author.id == g.user.id %}
             <div><a href="{{ url_for('delete', id=post.id) }}">{{ _('Delete') }}</a></div>
             {% endif %}
-
-              <div
-              class="fb-like"
-              data-share="true"
-              data-width="450"
-              data-show-faces="true">
-            </div>
-
         </td>
     </tr>
 </table>

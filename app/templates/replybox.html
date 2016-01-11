@@ -1,0 +1,19 @@
+<div class="comment-form">
+    <form class="form-horizontal" action="{{ url_for('comment', id=comment.id, page=page) }}" method="post" name="reply">
+        {{ replyform.hidden_tag() }}
+        <div class="control-group{% if replyform.body.errors %} error{% endif %}">
+            <label class="control-label" for="body">{{ _('Comment:') }}</label>
+            <div class="controls">
+                {{ replyform.body(maxlength=1000, class="span4") }}
+                {% for error in replyform.body.errors %}
+                    <span class="help-inline">[{{ error }}]</span><br>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <input class="btn btn-primary" type="submit" value="{{ _('Publish') }}">
+            </div>
+        </div>
+    </form>
+</div>

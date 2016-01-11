@@ -1,8 +1,8 @@
 from flask.ext.wtf import Form
-from wtforms import StringField, BooleanField, TextAreaField
+from wtforms import StringField, BooleanField, TextAreaField, SubmitField, SelectField
 from wtforms.validators import DataRequired, Length
 from flask.ext.babel import gettext
-from app.models import User
+from app.models import User, Role
 
 class LoginForm(Form):
     openid = StringField('openid', validators=[DataRequired()])
@@ -30,8 +30,44 @@ class EditForm(Form):
             return False
         return True
 
+class EditFormAdmin(Form):
+    nickname = StringField('nickname', validators=[DataRequired()])
+    about_me = TextAreaField('about_me', validators=[Length(min=0, max=140)])
+    role = SelectField('Role', coerce=int)
+    submit = SubmitField('Submit')
+
+    def __init__(self, user, *args, **kwargs):
+        super(EditFormAdmin, self).__init__(*args, **kwargs)
+        self.original_nickname = user.nickname
+        self.role.choices = [(role.id, role.name)
+                             for role in Role.query.order_by(Role.name).all()]
+        self.user = user
+
+    def validate(self):
+        if not Form.validate(self):
+            return False
+        if self.nickname.data == self.original_nickname:
+            return True
+        if self.nickname.data != User.make_valid_nickname(self.nickname.data):
+            self.nickname.errors.append(gettext('This nickname has invalid characters. Please use letters, numbers, dots and underscores only.'))
+            return False
+        user = User.query.filter_by(nickname=self.nickname.data).first()
+        if user is not None:
+            self.nickname.errors.append(gettext('This nickname is already in use. Please choose another one.'))
+            return False
+        return True
+
 class PostForm(Form):
-    post = StringField('post', validators=[DataRequired()])
+    title = StringField('title', validators=[DataRequired()])
+    body = StringField('body', validators=[DataRequired()])
 
 class SearchForm(Form):
     search = StringField('search', validators=[DataRequired()])
+
+class CommentForm(Form):
+    body = StringField('Enter your comment', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
+class ReplyForm(Form):
+    body = StringField('Enter your comment', validators=[DataRequired()])
+    submit = SubmitField('Submit')

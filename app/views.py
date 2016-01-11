@@ -1,11 +1,11 @@
 from flask import render_template, flash, redirect, session, url_for, request, g
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app, db, lm, oid
-from forms import LoginForm, EditForm, PostForm, SearchForm
-from models import User, Post
+from forms import LoginForm, EditForm, PostForm, SearchForm, EditFormAdmin, CommentForm, ReplyForm
+from models import User, Post, Permission, Role, Comment
 from datetime import datetime
-from config import POSTS_PER_PAGE, MAX_SEARCH_RESULTS
-from .emails import follower_notification
+from config import POSTS_PER_PAGE, MAX_SEARCH_RESULTS, COMMENTS_PER_POST
+from .emails import follower_notification, reply_notification
 from guess_language import guessLanguage
 from flask.ext.babel import gettext
 from app import babel
@@ -15,6 +15,7 @@ from .translate import microsoft_translate
 from flask.ext.sqlalchemy import get_debug_queries
 from config import DATABASE_QUERY_TIMEOUT
 from oauth import OAuthSignIn
+from decorators import permission_required, admin_required
 
 @app.route('/login', methods=['GET', 'POST'])
 @oid.loginhandler
@@ -37,10 +38,11 @@ def login():
 def index(page=1):
     form = PostForm()
     if form.validate_on_submit():
-        language = guessLanguage(form.post.data)
+        language = guessLanguage(form.body.data)
         if language == 'UNKNOWN' or len(language) > 5:
             language = ''
-        post = Post(body=form.post.data,
+        post = Post(title = form.title.data,
+                    body=form.body.data,
                     timestamp=datetime.utcnow(),
                     author=g.user,
                     language=language)
@@ -52,9 +54,92 @@ def index(page=1):
     return render_template('index.html',
                            title='Home',
                            form=form,
-                           posts=posts)
+                           posts=posts,
+                           pagination=posts)
 
-# just returns the user
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/random', methods=['GET', 'POST'])
+@app.route('/random/<int:page>', methods=['GET', 'POST'])
+@login_required
+def random(page=1):
+    form = PostForm()
+    if form.validate_on_submit():
+        language = guessLanguage(form.body.data)
+        if language == 'UNKNOWN' or len(language) > 5:
+            language = ''
+        post = Post(title = form.title.data,
+                    body=form.body.data,
+                    timestamp=datetime.utcnow(),
+                    author=g.user,
+                    language=language)
+        db.session.add(post)
+        db.session.commit()
+        flash(gettext('Your post is now live!'))
+        return redirect(url_for('index'))
+    posts = Post.query.paginate(page, POSTS_PER_PAGE, False)
+    return render_template('index.html',
+                           title='Home',
+                           form=form,
+                           posts=posts,
+                           pagination=posts)
+
+@app.route('/post/<int:id>', methods=['GET', 'POST'])
+@login_required
+def post(id):
+    post = Post.query.get_or_404(id)
+    form = CommentForm()
+
+    if form.validate_on_submit():
+        comment = Comment(body=form.body.data,
+                          timestamp=datetime.utcnow(),
+                          post=post,
+                          author=current_user._get_current_object())
+        db.session.add(comment)
+        db.session.commit()
+        flash('Your comment has been published.')
+        return redirect(url_for('post', id=post.id, page=-1))
+
+    page = request.args.get('page', 1, type=int)
+    if page == -1:
+        page = (post.comments.count() - 1) // COMMENTS_PER_POST + 1
+    pagination = post.comments.paginate(
+        page, per_page=COMMENTS_PER_POST,
+        error_out=False)
+    comments = pagination.items
+    return render_template('postdetails.html', post=post, commentform=form, replyform = ReplyForm(),
+                           comments=comments, pagination=pagination)
+
+@app.route('/comment/<int:id>',methods=['GET', 'POST'])
+@login_required
+def comment(id):
+
+    comment = Comment.query.get_or_404(id)
+    authorid = comment.author_id
+    postid = comment.post_id
+
+    post = Post.query.get_or_404(postid)
+    user = User.query.get_or_404(authorid)
+    page = request.args.get('page', 1, type=int)
+
+    form = ReplyForm()
+
+    if form.validate_on_submit():
+        reply = Comment(body='@' + user.nickname + ': ' + form.body.data,
+                          timestamp=datetime.utcnow(),
+                          post=post,
+                          author=current_user._get_current_object())
+        db.session.add(reply)
+        db.session.flush()
+        r = comment.reply(reply)
+        db.session.add(r)
+        db.session.commit()
+
+        flash('Your comment has been published.')
+    commenturl = url_for('post', id=post.id, page=page, _external=True)
+    reply_notification(user, g.user, commenturl)
+    return redirect(url_for('post', id=post.id, page=page))
+
+# used by the flask loading manager
 @lm.user_loader
 def load_user(id):
     return User.query.get(int(id))
@@ -77,9 +162,11 @@ def after_login(resp):
         user = User(nickname=nickname, email=resp.email)
         db.session.add(user)
         db.session.commit()
+
         # make the user follow him/herself
         db.session.add(user.follow(user))
         db.session.commit()
+
     remember_me = False
     if 'remember_me' in session:
         remember_me = session['remember_me']
@@ -109,7 +196,6 @@ def after_request(response):
             app.logger.warning("SLOW QUERY: %s\nParameters: %s\nDuration: %fs\nContext: %s\n" % (query.statement, query.parameters, query.duration, query.context))
     return response
 
-
 @app.route('/logout')
 def logout():
     logout_user()
@@ -126,7 +212,8 @@ def user(nickname, page=1):
     posts = user.posts.paginate(page, POSTS_PER_PAGE, False)
     return render_template('user.html',
                            user=user,
-                           posts=posts)
+                           posts=posts,
+                           pagination=posts)
 
 @app.route('/edit', methods=['GET', 'POST'])
 @login_required
@@ -143,6 +230,25 @@ def edit():
         form.nickname.data = g.user.nickname
         form.about_me.data = g.user.about_me
     return render_template('edit.html', form=form)
+
+@app.route('/editadmin/<int:id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def editadmin(id):
+    user = User.query.get_or_404(id)
+    form = EditFormAdmin(user=user)
+    if form.validate_on_submit():
+        user.nickname = form.nickname.data
+        user.role = Role.query.get(form.role.data)
+        user.about_me = form.about_me.data
+        db.session.add(user)
+        db.session.commit()
+        flash('The profile has been updated.')
+        return redirect(url_for('user', nickname=user.nickname))
+    form.nickname.data = user.nickname
+    form.role.data = user.role_id
+    form.about_me.data = user.about_me
+    return render_template('editadmin.html', form=form, user=user)
 
 @app.errorhandler(404)
 def not_found_error(error):
@@ -173,7 +279,6 @@ def follow(nickname):
 
     follower_notification(user, g.user)
     return redirect(url_for('user', nickname=nickname))
-
 
 @app.route('/unfollow/<nickname>')
 @login_required
@@ -242,7 +347,6 @@ def delete(id):
     flash('Your post has been deleted.')
     return redirect(url_for('index'))
 
-
 @app.route('/authorize/<provider>')
 def oauth_authorize(provider):
     if g.user is not None and g.user.is_authenticated:
@@ -264,5 +368,42 @@ def oauth_callback(provider):
         user = User(social_id=social_id, nickname=username, email=email)
         db.session.add(user)
         db.session.commit()
+        # make the user follow him/herself
+        db.session.add(user.follow(user))
+        db.session.commit()
     login_user(user, True)
     return redirect(url_for('index'))
+
+@app.route('/moderate')
+@login_required
+@permission_required(Permission.MODERATE_COMMENTS)
+def moderate():
+    page = request.args.get('page', 1, type=int)
+    pagination = Comment.query.order_by(Comment.timestamp.desc()).paginate(
+        page, per_page=COMMENTS_PER_POST,
+        error_out=False)
+    comments = pagination.items
+    return render_template('moderate.html', comments=comments,
+                           pagination=pagination, page=page)
+
+@app.route('/moderate/enable/<int:id>')
+@login_required
+@permission_required(Permission.MODERATE_COMMENTS)
+def moderate_enable(id):
+    comment = Comment.query.get_or_404(id)
+    comment.disabled = False
+    db.session.add(comment)
+    db.session.commit()
+    return redirect(url_for('moderate',
+                            page=request.args.get('page', 1, type=int)))
+
+@app.route('/moderate/disable/<int:id>')
+@login_required
+@permission_required(Permission.MODERATE_COMMENTS)
+def moderate_disable(id):
+    comment = Comment.query.get_or_404(id)
+    comment.disabled = True
+    db.session.add(comment)
+    db.session.commit()
+    return redirect(url_for('moderate',
+                            page=request.args.get('page', 1, type=int)))

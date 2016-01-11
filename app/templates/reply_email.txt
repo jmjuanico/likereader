@@ -1,0 +1,9 @@
+{{ _('Dear %(nickname)s,', nickname=commentuser.nickname) }}
+
+{{ _('%(nickname)s has replied to your comment. Click on the following link to check it out %(nickname)s\'s profile page:', nickname=replyuser.nickname) }}
+
+{{ commenturl }}
+
+{{ _('Regards,') }}
+
+{{ _('The microblog admin') }}
