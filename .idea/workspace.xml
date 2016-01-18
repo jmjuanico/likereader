@@ -1,50 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8155bd8f-1481-4c94-bd72-45a4548c51d8" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/static/img/favicon.ico" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/static/css/app.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/static/js/app.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/templates/register.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/templates/servicelogin.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/templates/update.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/templates/update_email.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/templates/update_email.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/token.py" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/static/img/twitter.jpeg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/test.db" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/static/img/facebook.png" afterPath="$PROJECT_DIR$/app/static/img/facebook.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/static/img/google.png" afterPath="$PROJECT_DIR$/app/static/img/google.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/__init__.py" afterPath="$PROJECT_DIR$/app/__init__.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/emails.py" afterPath="$PROJECT_DIR$/app/emails.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/forms.py" afterPath="$PROJECT_DIR$/app/forms.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/models.py" afterPath="$PROJECT_DIR$/app/models.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/static/css/bootstrap.min.css" afterPath="$PROJECT_DIR$/app/static/css/bootstrap.min.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/static/js/bootstrap.min.js" afterPath="$PROJECT_DIR$/app/static/js/bootstrap.min.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/base.html" afterPath="$PROJECT_DIR$/app/templates/base.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/comment.html" afterPath="$PROJECT_DIR$/app/templates/comment.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/commentbox.html" afterPath="$PROJECT_DIR$/app/templates/commentbox.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/edit.html" afterPath="$PROJECT_DIR$/app/templates/edit.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/editadmin.html" afterPath="$PROJECT_DIR$/app/templates/editadmin.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/flash.html" afterPath="$PROJECT_DIR$/app/templates/flash.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/follower_email.html" afterPath="$PROJECT_DIR$/app/templates/follower_email.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/follower_email.txt" afterPath="$PROJECT_DIR$/app/templates/follower_email.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/index.html" afterPath="$PROJECT_DIR$/app/templates/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/login.html" afterPath="$PROJECT_DIR$/app/templates/login.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/post.html" afterPath="$PROJECT_DIR$/app/templates/post.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/postdetails.html" afterPath="$PROJECT_DIR$/app/templates/postdetails.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/random.html" afterPath="$PROJECT_DIR$/app/templates/random.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/reply_email.html" afterPath="$PROJECT_DIR$/app/templates/reply_email.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/reply_email.txt" afterPath="$PROJECT_DIR$/app/templates/reply_email.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/replybox.html" afterPath="$PROJECT_DIR$/app/templates/replybox.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/user.html" afterPath="$PROJECT_DIR$/app/templates/user.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views.py" afterPath="$PROJECT_DIR$/app/views.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config.py" afterPath="$PROJECT_DIR$/config.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/messages.pot" afterPath="$PROJECT_DIR$/messages.pot" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/requirements.txt" afterPath="$PROJECT_DIR$/requirements.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test.py" afterPath="$PROJECT_DIR$/test.py" />
-    </list>
+    <list default="true" id="8155bd8f-1481-4c94-bd72-45a4548c51d8" name="Default" comment="" />
     <ignored path="blogapp.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -116,11 +73,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="config.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="config.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/config.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5614035">
+            <state vertical-scroll-proportion="0.0">
               <caret line="114" column="19" selection-start-line="114" selection-start-column="19" selection-end-line="114" selection-end-column="19" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="requirements.txt" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/requirements.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -131,16 +98,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="17" column="22" selection-start-line="17" selection-start-column="22" selection-end-line="17" selection-end-column="22" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="postdetails.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/templates/postdetails.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="9" selection-end-column="6" />
               <folding />
             </state>
           </provider>
@@ -740,14 +697,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/templates/replybox.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="78" selection-start-line="0" selection-start-column="78" selection-end-line="0" selection-end-column="78" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/forms.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1105,8 +1054,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/config.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5614035">
+        <state vertical-scroll-proportion="0.0">
           <caret line="114" column="19" selection-start-line="114" selection-start-column="19" selection-end-line="114" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/requirements.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
