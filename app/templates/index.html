@@ -11,7 +11,7 @@
 
                 <div class="controls">
                     <!--{{ form.title(size=1000, maxlength=2000) }}-->
-                    <textarea id="title" name="title"rows="1" cols="10"></textarea>
+                    <textarea id="title" name="title"rows="1" cols="30"></textarea>
                     {% for error in form.title.errors %}
                         <span class="help-inline">[{{ error }}]</span><br>
                     {% endfor %}
@@ -24,7 +24,7 @@
 
                 <div class="controls">
                     <!--{{ form.body(size=1000, maxlength=2000) }}-->
-                    <textarea id="body" name="body"rows="5" cols="10"></textarea>
+                    <textarea id="body" name="body"rows="5" cols="30"></textarea>
                     {% for error in form.body.errors %}
                         <span class="help-inline">[{{ error }}]</span><br>
                     {% endfor %}
