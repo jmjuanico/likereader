@@ -2,7 +2,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>{{ _('Hi, %(nickname)s!', nickname=g.user.nickname) }}</h1>
+    <h1>{{ _('Hi, %(username)s!', username=g.user.username) }}</h1>
     {% include 'flash.html' %}
     <div class="well">
         <form class="form-horizontal" action="" method="post" name="post">
@@ -47,7 +47,7 @@
 {% if pagination %}
 {% import "macros.html" as macros %}
 <div class="pagination">
-    {{ macros.pagination_widget(pagination, 'index') }}
+    {{ macros.pagination_widget(pagination, 'random') }}
 </div>
 {% endif %}
 {% endblock %}

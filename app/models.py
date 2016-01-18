@@ -50,7 +50,11 @@ class Role(db.Model):
                           Permission.COMMENT |
                           Permission.WRITE_ARTICLES |
                           Permission.MODERATE_COMMENTS, False),
-            'Administrator': (Permission.ADMINISTER, False)
+            'Administrator': (Permission.ADMINISTER |
+                              Permission.FOLLOW |
+                              Permission.COMMENT |
+                              Permission.WRITE_ARTICLES |
+                              Permission.MODERATE_COMMENTS, False)
         }
         for r in roles:
             role = Role.query.filter_by(name=r).first()
@@ -68,8 +72,9 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     social_id = db.Column(db.String(64), nullable=True, unique=True)
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
-    nickname = db.Column(db.String(64), index=True, unique=True)
-    email = db.Column(db.String(120), index=True, unique=True)
+    username = db.Column(db.String(64), index=True, unique=True, nullable=False)
+    password = db.Column(db.String)
+    email = db.Column(db.String(120), index=True, unique=False, nullable=True)
     posts = db.relationship('Post', backref='author', lazy='dynamic', order_by = 'Post.timestamp.desc()')
     about_me = db.Column(db.Text)
     last_seen = db.Column(db.DateTime)
@@ -100,21 +105,23 @@ class User(db.Model):
             return str(self.id)  # python 3
 
     def avatar(self, size):
-        if self.email is not None:
+        if self.email and not 'defaultemail_' in self.email:
             return 'http://www.gravatar.com/avatar/%s?d=wavatar&s=%d' % (md5(self.email.encode('utf-8')).hexdigest(), size)
+        else:
+            return 'http://www.gravatar.com/avatar/%s?d=wavatar&s=%d' % (md5(self.username.encode('utf-8')).hexdigest(), size)
         return None
 
     @staticmethod
-    def make_unique_nickname(nickname):
-        if User.query.filter_by(nickname=nickname).first() is None:
-            return nickname
+    def make_unique_username(username):
+        if User.query.filter_by(username=username).first() is None:
+            return username
         version = 2
         while True:
-            new_nickname = nickname + str(version)
-            if User.query.filter_by(nickname=new_nickname).first() is None:
+            new_username = username + str(version)
+            if User.query.filter_by(username=new_username).first() is None:
                 break
             version += 1
-        return new_nickname
+        return new_username
 
     def follow(self, user):
         if not self.is_following(user):
@@ -132,11 +139,11 @@ class User(db.Model):
     def followed_posts(self):
         return Post.query.join(followers, (followers.c.followed_id == Post.user_id)).filter(followers.c.follower_id == self.id).order_by(Post.timestamp.desc())
 
-    # Here we just take the nickname and remove any characters that
+    # Here we just take the username and remove any characters that
     # are not letters, numbers, the dot or the underscore.
     @staticmethod
-    def make_valid_nickname(nickname):
-        return re.sub('[^a-zA-Z0-9_\.]', '', nickname)
+    def make_valid_username(username):
+        return re.sub('[^a-zA-Z0-9_\.]', '', username)
 
     @staticmethod
     def generate_fake(count=100):
@@ -147,7 +154,7 @@ class User(db.Model):
         seed()
         for i in range(count):
             u = User(email=forgery_py.internet.email_address(),
-                     nickname=forgery_py.internet.user_name(True),
+                     username=forgery_py.internet.user_name(True),
                      about_me=forgery_py.lorem_ipsum.sentence(),
                      last_seen=forgery_py.date.date(True))
             db.session.add(u)
@@ -164,7 +171,7 @@ class User(db.Model):
         return self.can(Permission.ADMINISTER)
 
     def __repr__(self):
-        return '<User %r>' % (self.nickname)
+        return '<User %r>' % (self.username)
 
 class Post(db.Model):
     __searchable__ = ['body']

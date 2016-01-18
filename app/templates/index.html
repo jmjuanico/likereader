@@ -2,13 +2,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>{{ _('Hi, %(nickname)s!', nickname=g.user.nickname) }}</h1>
-    {% include 'flash.html' %}
+    <h1>{{ _('Hi, %(username)s!', username=g.user.username) }}</h1>
     <div class="well">
         <form class="form-horizontal" action="" method="post" name="post">
             {{ form.hidden_tag() }}
             <div class="control-group{% if form.title.errors %} error{% endif %}">
-                <label class="control-label" for="title">{{ _('Say something:') }}</label>
+                <label class="control-label" for="title">{{ _('Title:') }}</label>
 
                 <div class="controls">
                     <!--{{ form.title(size=1000, maxlength=2000) }}-->
@@ -20,9 +19,8 @@
 
             </div>
 
-
             <div class="control-group{% if form.body.errors %} error{% endif %}">
-                <label class="control-label" for="body">{{ _('Say something:') }}</label>
+                <label class="control-label" for="body">{{ _('Body:') }}</label>
 
                 <div class="controls">
                     <!--{{ form.body(size=1000, maxlength=2000) }}-->

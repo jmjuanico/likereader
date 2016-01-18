@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!--login modal-->
+<div id="loginModal" class="modal show modal-wide" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+  <div class="modal-content">
+      <div class="modal-header">
+          <h1 class="text-center">Register</h1>
+      </div>
+      <div class="modal-body">
+
+          Login directly via
+            <br><br>
+            <div class="social-buttons text-center">
+                <a href="{{ url_for('oauth_authorize', provider='facebook') }}" class="btn btn-fb"><i class="fa fa-facebook"></i> Facebook</a>
+                <a href="{{ url_for('oauth_authorize', provider='twitter') }}" class="btn btn-tw"><i class="fa fa-twitter"></i> Twitter</a>
+            </div>
+            <br>
+            or a <strong><em>fast</em></strong> registration below...
+            <br><br>
+
+            <form class="form center-block" role="form" method="post" action="{{ url_for('register') }}">
+
+                  {{ form.csrf_token }}
+                <div class="form-group has-feedback">
+                  <input type="username" class="form-control input-lg-1"  {{ form.username(placeholder="User Name") }}
+                          <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                         <span>
+                             {% if form.username.errors %}
+                                {% for error in form.username.errors %}
+                                  {{ error }}
+                                {% endfor %}
+                              {% endif %}
+                         </span>
+                </div>
+
+                <div class="form-group has-feedback">
+                  <input type="email" class="form-control input-lg-1"   {{ form.email(placeholder="Email Address (Optional)") }}
+                         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                         <span>
+                             {% if form.email.errors %}
+                            {% for error in form.email.errors %}
+                              {{ error }}
+                            {% endfor %}
+                          {% endif %}
+                         </span>
+                </div>
+
+                <div class="form-group has-feedback">
+                  <input type="password" class="form-control input-lg-1"  {{ form.password(placeholder="Password") }}
+                         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                         <span>
+                             {% if form.password.errors %}
+                            {% for error in form.password.errors %}
+                              {{ error }}
+                            {% endfor %}
+                          {% endif %}
+                         </span>
+                </div>
+
+                <div class="form-group has-feedback">
+                  <input type="password" class="form-control input-lg-1"  {{ form.confirm(placeholder="Confirm Password") }}
+                         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                         <span>
+                             {% if form.confirm.errors %}
+                            {% for error in form.confirm.errors %}
+                              {{ error }}
+                            {% endfor %}
+                          {% endif %}
+                         </span>
+                </div>
+
+                  <div class="form-group">
+                      <button class="btn btn-success btn-lg-1 btn-block" name="submit" type="submit" value="register">Register</button>
+                        <button class="btn btn-info btn-lg-1 btn-block" name="submit" type="submit" value="cancel">Continue as guest for now</button>
+                          <span class="pull-right"><a href="/login">Log In</a></span>
+                        <span class="pull-left"><a href="/update">Reset Password</a></span>
+
+                  </div>
+          </form>
+
+      </div>
+
+      <div class="modal-footer">
+      </div>
+  </div>
+  </div>
+</div>
+
+
+
+{% endblock %}

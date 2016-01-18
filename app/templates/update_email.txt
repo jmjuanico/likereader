@@ -1,0 +1,11 @@
+{{ _('Dear %(username)s,', username=user.username) }}
+
+{{ _('You have requested a change of your password. Please follow this link to proceed:') }}
+
+{{ confirm_update_url }}
+
+{{ _('Regards,') }}
+
+{{ _('The microblog admin') }}
+
+

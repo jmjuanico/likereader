@@ -1,56 +1,62 @@
-<!-- extend base layout -->
 {% extends "base.html" %}
 
 {% block content %}
-    <script type="text/javascript">
-    function set_openid(openid, pr)
-    {
-        u = openid.search('<username>');
-        if (u != -1) {
-            // openid requires username
-            user = prompt('Enter your ' + pr + ' username:');
-            openid = openid.substr(0, u) + user;
-        }
-        form = document.forms['login'];
-        form.elements['openid'].value = openid;
-    }
-    </script>
-    {% include 'flash.html' %}
-    <div class="well">
-        <h3>{{ _('Please Sign In') }}</h3>
-        <form class="form" action="" method="post" name="login">
-            {{ form.hidden_tag() }}
-            <div class="help-block">{{ _('Click on your OpenID provider below:') }}</div>
-            <div class="control-group">
-                {% for pr in providers %}
-                    {% if not pr['url'].startswith('http') %}
-                        <a href="{{ url_for('oauth_authorize', provider=pr.name.lower()) }}"><img src="/static/img/{{ pr.name.lower() }}.png" class="img-polaroid" style="margin:2px;" /></a>
-                    {% else %}
-                        <a href="javascript:set_openid('{{ pr.url }}', '{{ pr.name }}');"><img src="/static/img/{{ pr.name.lower() }}.png" class="img-polaroid" style="margin:2px;" /></a>
-                    {% endif %}
-                {% endfor %}
+<!--login modal-->
+<div id="loginModal" class="modal show modal-wide" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+  <div class="modal-content">
+      <div class="modal-header">
+          <!--<h1 class="text-center"><span class="glyphicon glyphicon-log-in"></span> Login</h1>-->
+          <h1 class="text-center"> Login</h1>
+      </div>
+      <div class="modal-body">
+
+            Login directly via
+            <br><br>
+            <div class="social-buttons text-center">
+                <a href="{{ url_for('oauth_authorize', provider='facebook') }}" class="btn btn-fb"><i class="fa fa-facebook"></i> Facebook</a>
+                <a href="{{ url_for('oauth_authorize', provider='twitter') }}" class="btn btn-tw"><i class="fa fa-twitter"></i> Twitter</a>
             </div>
-            <div class="control-group{% if form.openid.errors %} error{% endif %}">
-                <label class="control-label" for="openid">{{ _('Or enter your OpenID here:') }}</label>
-                <div class="controls">
-                    {{ form.openid(size=80, class="span4") }}
-                    {% for error in form.openid.errors %}
-                        <span class="help-inline">[{{ error }}]</span><br>
-                    {% endfor %}
-                </div>
+            <br>
+            or continue signing in...
+            <br><br>
+
+          <form class="form center-block" name = 'form' role="form" method="post" action="{{ url_for('login') }}">
+              {{ form.csrf_token }}
+            <div class="form-group has-feedback">
+             <input type="text"  class="form-control input-lg-1" {{ form.username(placeholder="Username") }}
+               <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                     <span>
+                         {% if form.username.errors %}
+                            {% for error in form.username.errors %}
+                              {{ error }}
+                            {% endfor %}
+                          {% endif %}
+                     </span>
             </div>
-            <div class="control-group">
-                <div class="controls">
-                    <label class="checkbox" for="remember_me">
-                        {{ form.remember_me }} {{ _('Remember Me') }}
-                    </label>
-                </div>
+              <div class="form-group has-feedback ">
+               <input type="password" id = "password" class="form-control input-lg-1"  {{ form.password(placeholder="Password") }}
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                     <span>
+                         {% if form.password.errors %}
+                        {% for error in form.password.errors %}
+                          {{ error }}
+                        {% endfor %}
+                      {% endif %}
+                     </span>
             </div>
-            <div class="control-group">
-                <div class="controls">
-                    <input class="btn btn-primary" type="submit" value="{{ _('Sign In') }}">
-                </div>
-            </div>
-        </form>
-    </div>
+              <div class="form-group">
+                  <button class="btn btn-success btn-lg-1 btn-block" name="submit" type="submit" value="signin">Sign In</button>
+                  <button class="btn btn-info btn-lg-1 btn-block" name="submit" type="submit" value="cancel">Continue as guest for now</button>
+                <span class="pull-right"><a href="/register">Register</a></span>
+                <span class="pull-left"><a href="/update">Reset Password</a></span>
+              </div>
+          </form>
+      </div>
+
+      <div class="modal-footer"></div>
+  </div>
+  </div>
+</div>
+
 {% endblock %}

@@ -3,12 +3,14 @@
         {{ commentform.hidden_tag() }}
         <div class="control-group{% if commentform.body.errors %} error{% endif %}">
             <label class="control-label" for="body">{{ _('Comment:') }}</label>
+
             <div class="controls">
-                {{ commentform.body(maxlength=1000, class="span4") }}
+                {{ commentform.body(maxlength=1000, class="span20") }}
                 {% for error in commentform.body.errors %}
                     <span class="help-inline">[{{ error }}]</span><br>
                 {% endfor %}
             </div>
+
         </div>
         <div class="control-group">
             <div class="controls">

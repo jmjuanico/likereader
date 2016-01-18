@@ -78,6 +78,7 @@ DATABASE_QUERY_TIMEOUT = 0.5
 # email server
 # smtp.googlemail.com
 if os.environ.get('HEROKU') is not None:
+    SECURITY_PASSWORD_SALT = os.environ.get('app_pass_salt')
     SECRET_KEY = os.environ.get('app_secret')
     MAIL_SERVER = os.environ.get('SMTP_SERVER')
     MAIL_PORT = os.environ.get('SMTP_PORT')
@@ -102,6 +103,7 @@ if os.environ.get('HEROKU') is not None:
 else:
     clientsecrets = json.loads(open("{}/etc/clientsecret.json".format(basedir)).read())
     OAUTH_CREDENTIALS = clientsecrets
+    SECURITY_PASSWORD_SALT = config["app_pass_salt"]
     SECRET_KEY = config["app_secret"]
     MAIL_SERVER = config['smtp_server']
     MAIL_PORT = config['smtp_port']

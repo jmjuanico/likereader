@@ -1,6 +1,6 @@
-{{ _('Dear %(nickname)s,', nickname=commentuser.nickname) }}
+{{ _('Dear %(username)s,', username=commentuser.username) }}
 
-{{ _('%(nickname)s has replied to your comment. Click on the following link to check it out %(nickname)s\'s profile page:', nickname=replyuser.nickname) }}
+{{ _('%(username)s has replied to your comment. Click on the following link to check it out %(username)s\'s profile page:', username=replyuser.username) }}
 
 {{ commenturl }}
 

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!--login modal-->
+<div id="loginModal" class="modal show modal-wide" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+  <div class="modal-content">
+      <div class="modal-header">
+          <h1 class="text-center">Change Password</h1>
+      </div>
+      <div class="modal-body">
+
+            Login directly via
+            <br><br>
+            <div class="social-buttons text-center">
+                <a href="{{ url_for('oauth_authorize', provider='facebook') }}" class="btn btn-fb"><i class="fa fa-facebook"></i> Facebook</a>
+                <a href="{{ url_for('oauth_authorize', provider='twitter') }}" class="btn btn-tw"><i class="fa fa-twitter"></i> Twitter</a>
+            </div>
+            <br>
+            or continue to change password...
+            <br><br>
+
+          <form class="form center-block" role="form" method="post" action="{{ url_for('update') }}">
+              {{ form.csrf_token }}
+            <div class="form-group">
+              <input type="username" class="form-control input-lg-1"   {{ form.username(placeholder="Username") }}
+                     <span>
+                         {% if form.username.errors %}
+                        {% for error in form.username.errors %}
+                          {{ error }}
+                        {% endfor %}
+                      {% endif %}
+                     </span>
+            </div>
+
+
+          <div class="form-group">
+              <button class="btn btn-success btn-lg-1 btn-block" name="submit" type="submit" value="register">Reset password</button>
+                <button class="btn btn-info btn-lg-1 btn-block" name="submit" type="submit" value="cancel">Continue as guest for now</button>
+                  <span class="pull-right"><a href="/register">Register</a></span>
+                    <span class="pull-left"><a href="/login">Log In</a></span>
+          </div>
+
+      </div>
+
+      <div class="modal-footer border-top: 0px;">
+      </div>
+  </div>
+  </div>
+</div>
+
+
+{% endblock %}

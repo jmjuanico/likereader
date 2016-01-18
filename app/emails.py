@@ -19,7 +19,7 @@ def send_email(subject, sender, recipients, text_body, html_body):
     send_async_email(app, msg)
 
 def follower_notification(followed, follower):
-    send_email("[microblog] %s is now following you!" % follower.nickname,
+    send_email("[microblog] %s is now following you!" % follower.username,
                ADMINS[0],
                [followed.email],
                render_template("follower_email.txt",
@@ -28,10 +28,17 @@ def follower_notification(followed, follower):
                                user=followed, follower=follower))
 
 def reply_notification(commentuser, replyuser, commenturl):
-    send_email("[microblog] %s has replied to your comment!" % replyuser.nickname,
+    send_email("[microblog] %s has replied to your comment!" % replyuser.username,
                ADMINS[0],
                [commentuser.email],
                render_template("reply_email.txt",
                                commentuser=commentuser, replyuser=replyuser, commenturl=commenturl),
                render_template("reply_email.html",
                                commentuser=commentuser, replyuser=replyuser, commenturl=commenturl))
+
+def update_notification(user, confirm_update_url):
+    send_email("[microblog] %s has replied to your comment!" % user.username,
+               ADMINS[0],
+               [user.email],
+               render_template("update_email.txt", user=user, confirm_update_url=confirm_update_url),
+               render_template("update_email.html", user=user, confirm_update_url=confirm_update_url))

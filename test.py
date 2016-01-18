@@ -27,27 +27,27 @@ class TestCase(unittest.TestCase):
         db.drop_all()
 
     def test_avatar(self):
-        u = User(nickname='john', email='john@example.com')
+        u = User(username='john', email='john@example.com')
         avatar = u.avatar(128)
         expected = 'http://www.gravatar.com/avatar/d4c74594d841139328695756648b6bd6'
         assert avatar[0:len(expected)] == expected
 
-    def test_make_unique_nickname(self):
-        u = User(nickname='john', email='john@example.com')
+    def test_make_unique_username(self):
+        u = User(username='john', email='john@example.com')
         db.session.add(u)
         db.session.commit()
-        nickname = User.make_unique_nickname('john')
-        assert nickname != 'john'
-        u = User(nickname=nickname, email='susan@example.com')
+        username = User.make_unique_username('john')
+        assert username != 'john'
+        u = User(username=username, email='susan@example.com')
         db.session.add(u)
         db.session.commit()
-        nickname2 = User.make_unique_nickname('john')
-        assert nickname2 != 'john'
-        assert nickname2 != nickname
+        username2 = User.make_unique_username('john')
+        assert username2 != 'john'
+        assert username2 != username
 
     def test_follow(self):
-        u1 = User(nickname='john', email='john@example.com')
-        u2 = User(nickname='susan', email='susan@example.com')
+        u1 = User(username='john', email='john@example.com')
+        u2 = User(username='susan', email='susan@example.com')
         db.session.add(u1)
         db.session.add(u2)
         db.session.commit()
@@ -58,9 +58,9 @@ class TestCase(unittest.TestCase):
         assert u1.follow(u2) is None
         assert u1.is_following(u2)
         assert u1.followed.count() == 1
-        assert u1.followed.first().nickname == 'susan'
+        assert u1.followed.first().username == 'susan'
         assert u2.followers.count() == 1
-        assert u2.followers.first().nickname == 'john'
+        assert u2.followers.first().username == 'john'
         u = u1.unfollow(u2)
         assert u is not None
         db.session.add(u)
@@ -71,10 +71,10 @@ class TestCase(unittest.TestCase):
 
     def test_follow_posts(self):
         # make four users
-        u1 = User(nickname='john', email='john@example.com')
-        u2 = User(nickname='susan', email='susan@example.com')
-        u3 = User(nickname='mary', email='mary@example.com')
-        u4 = User(nickname='david', email='david@example.com')
+        u1 = User(username='john', email='john@example.com')
+        u2 = User(username='susan', email='susan@example.com')
+        u3 = User(username='mary', email='mary@example.com')
+        u4 = User(username='david', email='david@example.com')
         db.session.add(u1)
         db.session.add(u2)
         db.session.add(u3)
@@ -127,13 +127,13 @@ class TestCase(unittest.TestCase):
         assert microsoft_translate(u'Español', 'es', 'en') == 'Spanish'
 
     def test_user(self):
-        # make valid nicknames
-        n = User.make_valid_nickname('John_123')
+        # make valid usernames
+        n = User.make_valid_username('John_123')
         assert n == 'John_123'
-        n = User.make_valid_nickname('John_[123]\n')
+        n = User.make_valid_username('John_[123]\n')
         assert n == 'John_123'
         # create a user
-        u = User(nickname='john', email='john@example.com')
+        u = User(username='john', email='john@example.com')
         db.session.add(u)
         db.session.commit()
         assert u.is_authenticated is True
@@ -141,15 +141,15 @@ class TestCase(unittest.TestCase):
         assert u.is_anonymous is False
         assert u.id == int(u.get_id())
 
-    def test_make_unique_nickname(self):
+    def test_make_unique_username(self):
         # create a user and write it to the database
-        u = User(nickname='john', email='john@example.com')
+        u = User(username='john', email='john@example.com')
         db.session.add(u)
         db.session.commit()
-        nickname = User.make_unique_nickname('susan')
-        assert nickname == 'susan'
-        nickname = User.make_unique_nickname('john')
-        assert nickname != 'john'
+        username = User.make_unique_username('susan')
+        assert username == 'susan'
+        username = User.make_unique_username('john')
+        assert username != 'john'
 
 if __name__ == '__main__':
     try:

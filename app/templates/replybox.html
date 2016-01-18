@@ -1,4 +1,4 @@
-<div class="comment-form">
+<div id = "comment{{ comment.id }}" class="comment-form" style="display: none">
     <form class="form-horizontal" action="{{ url_for('comment', id=comment.id, page=page) }}" method="post" name="reply">
         {{ replyform.hidden_tag() }}
         <div class="control-group{% if replyform.body.errors %} error{% endif %}">

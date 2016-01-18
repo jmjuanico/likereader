@@ -1,61 +1,148 @@
 from flask import render_template, flash, redirect, session, url_for, request, g
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app, db, lm, oid
-from forms import LoginForm, EditForm, PostForm, SearchForm, EditFormAdmin, CommentForm, ReplyForm
+from forms import ServiceLoginForm, EditForm, PostForm, SearchForm, EditFormAdmin, CommentForm, ReplyForm\
+    , LoginForm, RegisterForm, UpdateForm, ChangePasswordForm
 from models import User, Post, Permission, Role, Comment
 from datetime import datetime
 from config import POSTS_PER_PAGE, MAX_SEARCH_RESULTS, COMMENTS_PER_POST
-from .emails import follower_notification, reply_notification
+from emails import follower_notification, reply_notification, update_notification
 from guess_language import guessLanguage
 from flask.ext.babel import gettext
 from app import babel
 from config import LANGUAGES, PROVIDERS
 from flask import jsonify
-from .translate import microsoft_translate
+from translate import microsoft_translate
 from flask.ext.sqlalchemy import get_debug_queries
 from config import DATABASE_QUERY_TIMEOUT
 from oauth import OAuthSignIn
 from decorators import permission_required, admin_required
+from app import bcrypt
+from token import generate_confirmation_token, confirm_token
+import json
+
+@app.route('/baselogin', methods=['GET', 'POST'])
+def baselogin():
+    if g.login_form.validate_on_submit():
+        user = User.query.filter_by(username=g.login_form.username.data).first()
+        session['remember_me'] = True
+        if user is not None:
+            if bcrypt.check_password_hash(str(user.password), str(g.login_form.password.data)):
+                login_user(user)
+                flash('Welcome ' + user.username + '! You are now logged in. ', 'success')
+            else:
+                flash('Oops! Sorry invalid username or password.', 'danger')
+        else:
+            flash('Oops! Sorry invalid username or password.', 'danger')
+    return redirect(url_for('index'))
 
 @app.route('/login', methods=['GET', 'POST'])
-@oid.loginhandler
 def login():
+    error = None
+    form = LoginForm()
+    if request.method == 'POST':
+        if request.form['submit'] == 'cancel':
+            return redirect(url_for('index'))
+        else:
+            if form.validate_on_submit():
+                session['remember_me'] = True
+                user = User.query.filter_by(username=form.username.data).first()
+                if user is not None:
+                    if bcrypt.check_password_hash(str(user.password), str(form.password.data)):
+                        login_user(user)
+                        flash('You were logged in. ', 'success')
+                        return redirect(url_for('index'))
+                    else:
+                        flash('Invalid email or password.', 'danger')
+                        return render_template('login.html', form=form, error=error)
+            return render_template('login.html', form=form, error=error)
+    return render_template('login.html', form=form, error=error)
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    error = None
+    form = RegisterForm()
+    if request.method == 'POST':
+        if request.form['submit'] == 'cancel':
+            return redirect(url_for('index'))
+        else:
+            if form.validate_on_submit():
+                user = User(
+                    username=form.username.data,
+                    email=form.email.data,
+                    password=bcrypt.generate_password_hash(form.password.data)
+                )
+                db.session.add(user)
+                db.session.commit()
+
+                if not form.email.data:
+                    user=User.query.filter_by(username=form.username.data).first()
+                    user.email = 'defaultemail_' + str(user.id) + '@gmail.com'
+                    db.session.add(user)
+                    db.session.commit()
+
+                login_user(user)
+                flash('You were logged in. ', 'success')
+
+                return redirect(url_for('index'))
+            return render_template('register.html', form=form, error=error)
+    return render_template('register.html', form=form, error=error)
+
+@app.route('/update', methods=['GET', 'POST'])   # pragma: no cover
+def update():
+    error = None
+    form = UpdateForm()
+    if request.method == 'POST':
+        if request.form['submit'] == 'cancel':
+            return redirect(url_for('index'))
+        else:
+            if form.validate_on_submit():
+                user = User.query.filter_by(username=form.username.data).first()
+                if user is not None:
+                    # creates and sends the token which contains the secret keys
+                    token = generate_confirmation_token(user.email)
+                    confirm_update_url = url_for('confirm_password', token=token, _external=True)
+                    update_notification(user, confirm_update_url)
+
+                    flash('A confirmation email has been sent.', 'success')
+                else:
+                    print 'else'
+                    flash('Invalid username.', 'danger')
+                    return redirect(url_for("register"))
+            return render_template('update.html', form=form, error=error)
+    return render_template('update.html', form=form, error=error)
+
+# will be called from email
+@app.route('/confirm_password/<token>')
+def confirm_password(token):
+    try:
+        # gets and compare the token from the email
+        email = confirm_token(token)
+    except:
+        # flash error message if token does not match
+        flash('The confirmation link is invalid or has expired.', 'danger')
+
+    user = User.query.filter_by(email=email).first()
+    if user:
+        login_user(user)
+        # if matches then redirects to profile page
+        flash('You can now change your password. Thanks!', 'success')
+        return redirect(url_for('edit'))
+
+@app.route('/servicelogin', methods=['GET', 'POST'])
+@oid.loginhandler
+def servicelogin():
     if g.user is not None and g.user.is_authenticated:
         return redirect(url_for('index'))
-    form = LoginForm()
+    form = ServiceLoginForm()
     if form.validate_on_submit():
-        session['remember_me'] = form.remember_me.data
-        return oid.try_login(form.openid.data, ask_for=['nickname', 'email'])
-    return render_template('login.html',
+        # session['remember_me'] = form.remember_me.data
+        session['remember_me'] = True
+        return oid.try_login(form.openid.data, ask_for=['username', 'email'])
+    return render_template('servicelogin.html',
                            title='Sign In',
                            form=form,
                            providers=PROVIDERS)
-
-@app.route('/', methods=['GET', 'POST'])
-@app.route('/index', methods=['GET', 'POST'])
-@app.route('/index/<int:page>', methods=['GET', 'POST'])
-@login_required
-def index(page=1):
-    form = PostForm()
-    if form.validate_on_submit():
-        language = guessLanguage(form.body.data)
-        if language == 'UNKNOWN' or len(language) > 5:
-            language = ''
-        post = Post(title = form.title.data,
-                    body=form.body.data,
-                    timestamp=datetime.utcnow(),
-                    author=g.user,
-                    language=language)
-        db.session.add(post)
-        db.session.commit()
-        flash(gettext('Your post is now live!'))
-        return redirect(url_for('index'))
-    posts = g.user.followed_posts().paginate(page, POSTS_PER_PAGE, False)
-    return render_template('index.html',
-                           title='Home',
-                           form=form,
-                           posts=posts,
-                           pagination=posts)
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/random', methods=['GET', 'POST'])
@@ -75,8 +162,35 @@ def random(page=1):
         db.session.add(post)
         db.session.commit()
         flash(gettext('Your post is now live!'))
+        return redirect(url_for('random'))
+    posts = g.user.followed_posts().paginate(page, POSTS_PER_PAGE, False)
+    return render_template('random.html',
+                           title='Home',
+                           form=form,
+                           posts=posts,
+                           pagination=posts)
+
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
+@app.route('/index/<int:page>', methods=['GET', 'POST'])
+# @login_required
+def index(page=1):
+    form = PostForm()
+    if form.validate_on_submit():
+        language = guessLanguage(form.body.data)
+        if language == 'UNKNOWN' or len(language) > 5:
+            language = ''
+        post = Post(title = form.title.data,
+                    body=form.body.data,
+                    timestamp=datetime.utcnow(),
+                    author=g.user,
+                    language=language)
+        db.session.add(post)
+        db.session.commit()
+        flash(gettext('Your post is now live!'))
         return redirect(url_for('index'))
-    posts = Post.query.paginate(page, POSTS_PER_PAGE, False)
+    posts = Post.query.order_by(Post.timestamp.desc()).paginate(page, POSTS_PER_PAGE, False)
+    # posts = Post.query.paginate(page, POSTS_PER_PAGE, False)
     return render_template('index.html',
                            title='Home',
                            form=form,
@@ -84,7 +198,7 @@ def random(page=1):
                            pagination=posts)
 
 @app.route('/post/<int:id>', methods=['GET', 'POST'])
-@login_required
+# @login_required
 def post(id):
     post = Post.query.get_or_404(id)
     form = CommentForm()
@@ -124,7 +238,8 @@ def comment(id):
     form = ReplyForm()
 
     if form.validate_on_submit():
-        reply = Comment(body='@' + user.nickname + ': ' + form.body.data,
+        user_url = url_for('user', username=user.username, _external=True)
+        reply = Comment(body_html= '<a href="' + user_url + '">@' + user.username + '</a> ' + form.body.data,
                           timestamp=datetime.utcnow(),
                           post=post,
                           author=current_user._get_current_object())
@@ -136,7 +251,8 @@ def comment(id):
 
         flash('Your comment has been published.')
     commenturl = url_for('post', id=post.id, page=page, _external=True)
-    reply_notification(user, g.user, commenturl)
+    if user.email:
+        reply_notification(user, g.user, commenturl)
     return redirect(url_for('post', id=post.id, page=page))
 
 # used by the flask loading manager
@@ -153,13 +269,13 @@ def after_login(resp):
         return redirect(url_for('login'))
     user = User.query.filter_by(email=resp.email).first()
     if user is None:
-        nickname = resp.nickname
-        if nickname is None or nickname == "":
-            nickname = resp.email.split('@')[0]
+        username = resp.username
+        if username is None or username == "":
+            username = resp.email.split('@')[0]
 
-        nickname = User.make_valid_nickname(nickname)
-        nickname = User.make_unique_nickname(nickname)
-        user = User(nickname=nickname, email=resp.email)
+        username = User.make_valid_username(username)
+        username = User.make_unique_username(username)
+        user = User(username=username, email=resp.email)
         db.session.add(user)
         db.session.commit()
 
@@ -184,8 +300,9 @@ def before_request():
         g.user.last_seen = datetime.utcnow()
         db.session.add(g.user)
         db.session.commit()
-        g.search_form = SearchForm()
     g.locale = get_locale()
+    g.search_form = SearchForm()
+    g.login_form = LoginForm()
 
 # This will record queries that are running too long based on the query timeout config
 # result will be added in the logger
@@ -201,13 +318,13 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
-@app.route('/user/<nickname>')
-@app.route('/user/<nickname>/<int:page>')
-@login_required
-def user(nickname, page=1):
-    user = User.query.filter_by(nickname=nickname).first()
+@app.route('/user/<username>')
+@app.route('/user/<username>/<int:page>')
+# @login_required
+def user(username, page=1):
+    user = User.query.filter_by(username=username).first()
     if user is None:
-        flash(gettext('User %(nickname)s not found.', nickname = nickname))
+        flash(gettext('User %(username)s not found.', username = username))
         return redirect(url_for('index'))
     posts = user.posts.paginate(page, POSTS_PER_PAGE, False)
     return render_template('user.html',
@@ -218,18 +335,34 @@ def user(nickname, page=1):
 @app.route('/edit', methods=['GET', 'POST'])
 @login_required
 def edit():
-    form = EditForm(g.user.nickname)
-    if form.validate_on_submit():
-        g.user.nickname = form.nickname.data
-        g.user.about_me = form.about_me.data
+    editform = EditForm(g.user.username)
+    if editform.validate_on_submit():
+        g.user.username = editform.username.data
+        g.user.about_me = editform.about_me.data
         db.session.add(g.user)
         db.session.commit()
         flash(gettext('Your changes have been saved.'))
         return redirect(url_for('edit'))
     else:
-        form.nickname.data = g.user.nickname
-        form.about_me.data = g.user.about_me
-    return render_template('edit.html', form=form)
+        editform.username.data = g.user.username
+        editform.about_me.data = g.user.about_me
+    return render_template('edit.html', user = g.user, editform=editform, passwordform = ChangePasswordForm())
+
+@app.route('/accessrights', methods=['GET', 'POST'])
+@login_required
+def accessrights():
+    form = ChangePasswordForm(request.form)
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=g.user.email).first()
+        if user:
+            user.password = bcrypt.generate_password_hash(form.password.data)
+            db.session.commit()
+            flash('Password successfully changed.', 'success')
+            return redirect(url_for('edit'))
+        else:
+            flash('Password change was unsuccessful.', 'danger')
+            return redirect(url_for('edit'))
+    return redirect(url_for('edit'))
 
 @app.route('/editadmin/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -238,14 +371,14 @@ def editadmin(id):
     user = User.query.get_or_404(id)
     form = EditFormAdmin(user=user)
     if form.validate_on_submit():
-        user.nickname = form.nickname.data
+        user.username = form.username.data
         user.role = Role.query.get(form.role.data)
         user.about_me = form.about_me.data
         db.session.add(user)
         db.session.commit()
         flash('The profile has been updated.')
-        return redirect(url_for('user', nickname=user.nickname))
-    form.nickname.data = user.nickname
+        return redirect(url_for('user', username=user.username))
+    form.username.data = user.username
     form.role.data = user.role_id
     form.about_me.data = user.about_me
     return render_template('editadmin.html', form=form, user=user)
@@ -259,55 +392,55 @@ def internal_error(error):
     db.session.rollback()
     return render_template('500.html'), 500
 
-@app.route('/follow/<nickname>')
+@app.route('/follow/<username>')
 @login_required
-def follow(nickname):
-    user = User.query.filter_by(nickname=nickname).first()
+def follow(username):
+    user = User.query.filter_by(username=username).first()
     if user is None:
-        flash(gettext('User %(nickname)s not found.', nickname = nickname))
+        flash(gettext('User %(username)s not found.', username = username))
         return redirect(url_for('index'))
     if user == g.user:
         flash(gettext('You can\'t follow yourself!'))
-        return redirect(url_for('user', nickname=nickname))
+        return redirect(url_for('user', username=username))
     u = g.user.follow(user)
     if u is None:
-        flash(gettext('Cannot follow %(nickname)s.', nickname = nickname))
-        return redirect(url_for('user', nickname=nickname))
+        flash(gettext('Cannot follow %(username)s.', username = username))
+        return redirect(url_for('user', username=username))
     db.session.add(u)
     db.session.commit()
-    flash(gettext('You are now following %(nickname)s!', nickname = nickname))
+    flash(gettext('You are now following %(username)s!', username = username))
 
     follower_notification(user, g.user)
-    return redirect(url_for('user', nickname=nickname))
+    return redirect(url_for('user', username=username))
 
-@app.route('/unfollow/<nickname>')
+@app.route('/unfollow/<username>')
 @login_required
-def unfollow(nickname):
-    user = User.query.filter_by(nickname=nickname).first()
+def unfollow(username):
+    user = User.query.filter_by(username=username).first()
     if user is None:
-        flash(gettext('User %(nickname)s not found.', nickname = nickname))
+        flash(gettext('User %(username)s not found.', username = username))
         return redirect(url_for('index'))
     if user == g.user:
         flash(gettext('You can\'t unfollow yourself!'))
-        return redirect(url_for('user', nickname=nickname))
+        return redirect(url_for('user', username=username))
     u = g.user.unfollow(user)
     if u is None:
-        flash(gettext('Cannot unfollow %(nickname)s.', nickname = nickname))
-        return redirect(url_for('user', nickname=nickname))
+        flash(gettext('Cannot unfollow %(username)s.', username = username))
+        return redirect(url_for('user', username=username))
     db.session.add(u)
     db.session.commit()
-    flash(gettext('You have stopped following %(nickname)s.', nickname = nickname))
-    return redirect(url_for('user', nickname=nickname))
+    flash(gettext('You have stopped following %(username)s.', username = username))
+    return redirect(url_for('user', username=username))
 
 @app.route('/search', methods=['POST'])
-@login_required
+# @login_required
 def search():
     if not g.search_form.validate_on_submit():
         return redirect(url_for('index'))
     return redirect(url_for('search_results', query=g.search_form.search.data))
 
 @app.route('/search_results/<query>')
-@login_required
+# @login_required
 def search_results(query):
     results = Post.query.whoosh_search(query, MAX_SEARCH_RESULTS).all()
     return render_template('search_results.html',
@@ -322,7 +455,7 @@ def get_locale():
     return request.accept_languages.best_match(LANGUAGES.keys())
 
 @app.route('/translate', methods=['POST'])
-@login_required
+# @login_required
 def translate():
     return jsonify({
         'text': microsoft_translate(
@@ -365,7 +498,7 @@ def oauth_callback(provider):
         return redirect(url_for('login'))
     user = User.query.filter_by(social_id=social_id).first()
     if not user:
-        user = User(social_id=social_id, nickname=username, email=email)
+        user = User(social_id=social_id, username=username, email=email)
         db.session.add(user)
         db.session.commit()
         # make the user follow him/herself
@@ -384,7 +517,7 @@ def moderate():
         error_out=False)
     comments = pagination.items
     return render_template('moderate.html', comments=comments,
-                           pagination=pagination, page=page)
+                           pagination=pagination, page=page, replyform = ReplyForm())
 
 @app.route('/moderate/enable/<int:id>')
 @login_required

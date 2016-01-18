@@ -8,13 +8,15 @@ from config import basedir, ADMINS, MAIL_SERVER, MAIL_PORT, MAIL_USERNAME, MAIL_
 from flask.ext.mail import Mail
 from .momentjs import momentjs
 from flask.ext.babel import Babel, lazy_gettext
+from flask.ext.bcrypt import Bcrypt
 
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
 app.config.from_object('config')
 db = SQLAlchemy(app)
 lm = LoginManager()
 lm.init_app(app)
-lm.login_view = 'login'
+lm.login_view = 'index'
 lm.login_message = lazy_gettext('Please log in to access this page.')
 oid = OpenID(app, os.path.join(basedir, 'tmp'))
 mail = Mail(app)
@@ -74,25 +76,31 @@ from app import views, models
 # make sure admin account is setup
 from models import User, Role, Permission
 
+"""
 @app.context_processor
 def inject_permissions():
     return dict(Permission=Permission)
+"""
+# will throw an error if database or the table doesnt exist yet
+try:
+    # initialize roles
+    Role.insert_roles()
 
-# initialize roles
-Role.insert_roles()
+    # add admin if not yet added
+    admin_email = ADMINS[0]
+    # this returns result object
+    admin_user = User.query.filter_by(email=admin_email).first()
+    # this returns object values
+    admin_role = db.session.query(Role).filter(Role.permissions==Permission.ADMINISTER).first()
 
-# add admin if not yet added
-admin_email = ADMINS[0]
-# this returns result object
-admin_user = User.query.filter_by(email=admin_email).first()
-# this returns object values
-admin_role = db.session.query(Role).filter(Role.permissions==Permission.ADMINISTER).first()
+    if not admin_user:
+        defaultpassword = bcrypt.generate_password_hash('1234')
+        user = User(username='admin', email=admin_email, role=admin_role, password = defaultpassword)
+        db.session.add(user)
+        db.session.commit()
 
-if not admin_user:
-    user = User(nickname='admin', email=admin_email, role=admin_role)
-    db.session.add(user)
-    db.session.commit()
-
-    # follow yourself
-    db.session.add(user.follow(user))
-    db.session.commit()
+        # follow yourself
+        db.session.add(user.follow(user))
+        db.session.commit()
+except:
+    pass

@@ -1,10 +1,10 @@
-<p>Dear {{ user.nickname }},</p>
-<p>{{ _('%(nickname)s is now a follower.', nickname='<a href="' + url_for("user", nickname=follower.nickname, _external=True) + '">' + follower.nickname + '</a>') }}</p>
+<p>Dear {{ user.username }},</p>
+<p>{{ _('%(username)s is now a follower.', username='<a href="' + url_for("user", username=follower.username, _external=True) + '">' + follower.username + '</a>') }}</p>
 <table>
     <tr valign="top">
         <td><img src="{{ follower.avatar(50) }}"></td>
         <td>
-            <a href="{{ url_for('user', nickname=follower.nickname, _external=True)}}">{{ follower.nickname }}</a><br />
+            <a href="{{ url_for('user', username=follower.username, _external=True)}}">{{ follower.username }}</a><br />
             {{ follower.about_me }}
         </td>
     </tr>

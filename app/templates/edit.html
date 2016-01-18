@@ -3,24 +3,56 @@
 
 {% block content %}
     <h1>{{ _('Edit Your Profile') }}</h1>
-    {% include 'flash.html' %}
+
     <div class="well">
+
+        <p>Email: <strong>{{user.email}}</strong></p>
+
+        <h2>Change Password</h2>
+        <br>
+        <form class="form-reset" role="form" method="post" action="{{ url_for('accessrights') }}">
+
+          {{ passwordform.csrf_token }}
+          <p>
+            {{ passwordform.password(placeholder="password") }}
+            <span class="error">
+              {% if passwordform.password.errors %}
+                {% for error in passwordform.password.errors %}
+                  {{ error }}
+                {% endfor %}
+              {% endif %}
+            </span>
+          </p>
+          <p>
+          {{ passwordform.confirm(placeholder="confirm") }}
+            <span class="error">
+              {% if passwordform.confirm.errors %}
+                {% for error in passwordform.confirm.errors %}
+                  {{ error }}
+                {% endfor %}
+              {% endif %}
+            </span>
+          </p>
+          <button class="btn btn-success" type="submit">Update</button>
+        </form>
+
+
         <form class="form-horizontal" action="" method="post" name="edit">
-            {{ form.hidden_tag() }}
-            <div class="control-group{% if form.nickname.errors %} error{% endif %}">
-                <label class="control-label" for="nickname">{{ _('Your nickname:') }}</label>
+            {{ editform.hidden_tag() }}
+            <div class="control-group{% if editform.username.errors %} error{% endif %}">
+                <label class="control-label" for="username">{{ _('Your username:') }}</label>
                 <div class="controls">
-                    {{ form.nickname(maxlength=64, class="span4") }}
-                    {% for error in form.nickname.errors %}
+                    {{ editform.username(maxlength=64, class="span4") }}
+                    {% for error in editform.username.errors %}
                         <span class="help-inline">[{{ error }}]</span><br>
                     {% endfor %}
                 </div>
             </div>
-            <div class="control-group{% if form.about_me.errors %} error{% endif %}">
+            <div class="control-group{% if editform.about_me.errors %} error{% endif %}">
                 <label class="control-label" for="about_me">{{ _('About yourself:') }}</label>
                 <div class="controls">
-                    {{ form.about_me(cols=64, rows=4, class="span4") }}
-                    {% for error in form.about_me.errors %}
+                    {{ editform.about_me(cols=64, rows=4, class="span4") }}
+                    {% for error in editform.about_me.errors %}
                         <span class="help-inline">[{{ error }}]</span><br>
                     {% endfor %}
                 </div>
