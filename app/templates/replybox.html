@@ -1,19 +1,36 @@
-<div id = "comment{{ comment.id }}" class="comment-form" style="display: none">
-    <form class="form-horizontal" action="{{ url_for('comment', id=comment.id, page=page) }}" method="post" name="reply">
-        {{ replyform.hidden_tag() }}
-        <div class="control-group{% if replyform.body.errors %} error{% endif %}">
-            <label class="control-label" for="body">{{ _('Comment:') }}</label>
-            <div class="controls">
-                {{ replyform.body(maxlength=1000, class="span4") }}
-                {% for error in replyform.body.errors %}
-                    <span class="help-inline">[{{ error }}]</span><br>
-                {% endfor %}
+
+    <div class="comment-action">
+        {% if moderate %}
+            {% if comment.disabled %}
+                <a class="btn btn-success btn-xs" href="{{ url_for('moderate_enable', id=comment.id, page=page) }}">Enable</a>
+            {% else %}
+                <a class="btn btn-danger btn-xs" href="{{ url_for('moderate_disable', id=comment.id, page=page) }}">Disable</a>
+            {% endif %}
+                <a class="btn btn-info btn-xs" href="javascript:replycomment('{{ comment.id }}');">{{ _('Reply') }}</a>
+        {% else %}
+            <a class="btn btn-default btn-xs" href="javascript:replycomment('{{ comment.id }}');">{{ _('Reply') }}</a>
+        {% endif %}
+    </div>
+
+    <!-- hide then show when button is clicked -->
+    <div id = "comment{{ comment.id }}" class="comment-form" style="display: none;">
+        <form class="form-horizontal" action="{{ url_for('comment', id=comment.id, page=page) }}" method="post" name="reply">
+            {{ replyform.hidden_tag() }}
+            <div class="control-group{% if replyform.body.errors %} error{% endif %}">
+                <label class="control-label" for="body">{{ _('Comment:') }}</label>
+                <textarea id = "commentbox{{ comment.id }}" name="body"  maxlength=8000 class='expanding'></textarea>
+                <div class="controls">
+                    {% for error in replyform.body.errors %}
+                        <span class="help-inline">[{{ error }}]</span><br>
+                    {% endfor %}
+                </div>
             </div>
-        </div>
-        <div class="control-group">
-            <div class="controls">
-                <input class="btn btn-primary" type="submit" value="{{ _('Publish') }}">
+            <div class="control-group">
+                <div class="controls">
+                    <input class="btn btn-primary" type="submit" value="{{ _('Publish') }}">
+                </div>
             </div>
-        </div>
-    </form>
-</div>
+        </form>
+    </div>
+
+

@@ -193,7 +193,7 @@ def index(page=1):
     # posts = Post.query.paginate(page, POSTS_PER_PAGE, False)
     return render_template('index.html',
                            title='Home',
-                           form=form,
+                           postform=form,
                            posts=posts,
                            pagination=posts)
 

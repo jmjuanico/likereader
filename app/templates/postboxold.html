@@ -1,0 +1,35 @@
+    <div class="well">
+        <form class="form-horizontal" action="" method="post" name="post">
+            {{ form.hidden_tag() }}
+            <div class="control-group{% if form.title.errors %} error{% endif %}">
+                <label class="control-label" for="title">{{ _('Title:') }}</label>
+
+                <div class="controls">
+                    <!--{{ form.title(size=1000, maxlength=2000) }}-->
+                    <textarea id="title" name="title"rows="1" cols="30"></textarea>
+                    {% for error in form.title.errors %}
+                        <span class="help-inline">[{{ error }}]</span><br>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+            <div class="control-group{% if form.body.errors %} error{% endif %}">
+                <label class="control-label" for="body">{{ _('Body:') }}</label>
+
+                <div class="controls">
+                    <!--{{ form.body(size=1000, maxlength=2000) }}-->
+                    <textarea id="body" name="body"rows="5" cols="30"></textarea>
+                    {% for error in form.body.errors %}
+                        <span class="help-inline">[{{ error }}]</span><br>
+                    {% endfor %}
+                </div>
+
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <input class="btn btn-primary" type="submit" value="{{ _('Post!') }}">
+                </div>
+            </div>
+        </form>
+    </div>

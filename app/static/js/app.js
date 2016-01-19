@@ -48,10 +48,11 @@ shows up reply box when reply button is clicked
 ************************************************************************/
 
 function replycomment(commentid){
-    if ($(commentid).css('display') == 'none' ){
-        $(commentid).show();
+    if ($("#comment" + commentid).css('display') == 'none' ){
+        $("#comment" +commentid).show();
+        $("#commentbox" +commentid).expanding();
     } else {
-        $(commentid).hide();
+        $("#comment" +commentid).hide();
     }
 }
 
