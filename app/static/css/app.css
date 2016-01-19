@@ -1,11 +1,14 @@
-
-.content {
-     margin-top: 10px; 
-    padding: 10px;
- } 
-.modal {  margin-top: 10px;
-     padding: 10px; 
+/*****************************************************
+this is for fixed navbar
+******************************************************/
+body {
+    position: relative;
 }
+
+.modal  {
+    padding: 20px;
+}
+
 /***************************************************
 comments style
 ****************************************************/
@@ -17,6 +20,22 @@ div.comment-action {
     margin: 0;
 }
 hr {margin: 0;}
+
+/***************************************************
+text boxes formats
+****************************************************/
+.expanding {
+    border: solid 1px #dcdcdc;
+    background-color: #FFFFFF;
+    /**************************************
+    avoids Flash of unstyled content (FOUC)
+    ***************************************/
+    margin: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+}
 
 /**************************************************
  Flash messages
@@ -43,7 +62,7 @@ hr {margin: 0;}
  *************************************************/
 
 #signintoggle {
-margin: 8 auto;
+    margin: 8 auto;
 }
 
 #login-dp{

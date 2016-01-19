@@ -40,10 +40,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   </head>
-  <body>
+ <body data-spy="scroll" data-target=".navbar" data-offset="50">
 
-
-  <nav class="navbar navbar-default navbar-static-top">
+  <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container">
 
     <div class="navbar-header">
@@ -176,17 +175,12 @@
 </div>
 
 <div class="container">
-    <!-- this scrolls behind the navbar -->
-    <div class="content">
-
         <div class="row">
             <div class="col-sm-4"></div>
             <div class="col-sm-8">
                 {% block content %}{% endblock %}
             </div>
         </div>
-
-    </div>
 </div>
 
 

@@ -20,6 +20,28 @@ from decorators import permission_required, admin_required
 from app import bcrypt
 from token import generate_confirmation_token, confirm_token
 import json
+from urlparse import urlparse, urljoin
+
+# making sure no malicious redirect happens
+def is_safe_url(target):
+    ref_url = urlparse(request.host_url)
+    test_url = urlparse(urljoin(request.host_url, target))
+    return test_url.scheme in ('http', 'https') and ref_url.netloc == test_url.netloc
+
+# gets the next or the referrer url
+def get_redirect_target():
+    for target in request.values.get('next'), request.referrer:
+        if not target:
+            continue
+        if is_safe_url(target):
+            return target
+
+# redirects to the final url
+def redirect_back(endpoint, **values):
+    target = request.form['next']
+    if not target or not is_safe_url(target):
+        target = url_for(endpoint, **values)
+    return redirect(target)
 
 @app.route('/baselogin', methods=['GET', 'POST'])
 def baselogin():
@@ -35,14 +57,16 @@ def baselogin():
         else:
             flash('Oops! Sorry invalid username or password.', 'danger')
     return redirect(url_for('index'))
+    # return redirect_back('index')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
     form = LoginForm()
+    next = get_redirect_target()
     if request.method == 'POST':
         if request.form['submit'] == 'cancel':
-            return redirect(url_for('index'))
+            return redirect_back('index')
         else:
             if form.validate_on_submit():
                 session['remember_me'] = True
@@ -51,20 +75,21 @@ def login():
                     if bcrypt.check_password_hash(str(user.password), str(form.password.data)):
                         login_user(user)
                         flash('You were logged in. ', 'success')
-                        return redirect(url_for('index'))
+                        return redirect_back('index')
                     else:
                         flash('Invalid email or password.', 'danger')
                         return render_template('login.html', form=form, error=error)
-            return render_template('login.html', form=form, error=error)
-    return render_template('login.html', form=form, error=error)
+            return render_template('login.html', form=form, error=error, next=next)
+    return render_template('login.html', form=form, error=error, next=next)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     error = None
     form = RegisterForm()
+    next = get_redirect_target()
     if request.method == 'POST':
         if request.form['submit'] == 'cancel':
-            return redirect(url_for('index'))
+            return redirect_back('index')
         else:
             if form.validate_on_submit():
                 user = User(
@@ -84,17 +109,19 @@ def register():
                 login_user(user)
                 flash('You were logged in. ', 'success')
 
-                return redirect(url_for('index'))
-            return render_template('register.html', form=form, error=error)
-    return render_template('register.html', form=form, error=error)
+                # return redirect(url_for('index'))
+                return redirect_back('index')
+            return render_template('register.html', form=form, error=error, next=next)
+    return render_template('register.html', form=form, error=error, next=next)
 
 @app.route('/update', methods=['GET', 'POST'])   # pragma: no cover
 def update():
     error = None
     form = UpdateForm()
+    next = get_redirect_target()
     if request.method == 'POST':
         if request.form['submit'] == 'cancel':
-            return redirect(url_for('index'))
+            return redirect_back('index')
         else:
             if form.validate_on_submit():
                 user = User.query.filter_by(username=form.username.data).first()
@@ -108,9 +135,10 @@ def update():
                 else:
                     print 'else'
                     flash('Invalid username.', 'danger')
-                    return redirect(url_for("register"))
-            return render_template('update.html', form=form, error=error)
-    return render_template('update.html', form=form, error=error)
+                    return redirect_back('index')
+                    # return redirect(url_for("register"))
+            return render_template('update.html', form=form, error=error, next=next)
+    return render_template('update.html', form=form, error=error, next=next)
 
 # will be called from email
 @app.route('/confirm_password/<token>')

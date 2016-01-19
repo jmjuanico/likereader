@@ -5,7 +5,7 @@
         <div class="control-group{% if commentform.body.errors %} error{% endif %}">
 
             <label class="control-label" for="body">{{ _('Comment:') }}</label>
-            <textarea name="body"  maxlength=8000 class='expanding'></textarea>
+            <textarea name="body"  maxlength=8000 class="expanding"></textarea>
 
             <div class="controls">
                 {% for error in commentform.body.errors %}
@@ -16,9 +16,31 @@
         </div>
         <div class="control-group">
             <div class="controls">
-                <input class="btn btn-primary" type="submit" value="{{ _('Publish') }}">
+
+                {% if g.user.is_authenticated %}
+                <input class="btn btn-sm btn-primary" type="submit" value="{{ _('Publish') }}">
+                {% endif %}
+
             </div>
         </div>
     </form>
 </div>
+
+{% if not g.user.is_authenticated %}
+<button class="btn btn-sm btn-default" data-toggle="collapse" data-target="#commenttoggle">Comment</button>
+
+<div id="commenttoggle" class="collapse">
+    <div class="social-buttons">
+        <a href="{{ url_for('login', continue_url=request.url) }}" class="btn btn-sm btn-success">{{ _('Sign in') }}</a> or
+        <a href="{{ url_for('register', continue_url=request.url) }}" class="btn btn-sm btn-info">{{ _('Sign up') }}</a>
+        <a href="{{ url_for('login', continue_url=request.url) }}"><i>in <strong>seconds</strong> to enable to <strong>comment</strong></i></a>
+
+        <!--
+        <a href="{{ url_for('oauth_authorize', provider='facebook') }}" class="btn btn-fb"><i class="fa fa-facebook"></i></a>
+        <a href="{{ url_for('oauth_authorize', provider='twitter') }}" class="btn btn-tw"><i class="fa fa-twitter"></i></a>
+        -->
+    </div>
+</div>
+{% endif %}
+
 

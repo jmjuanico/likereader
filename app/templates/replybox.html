@@ -6,9 +6,13 @@
             {% else %}
                 <a class="btn btn-danger btn-xs" href="{{ url_for('moderate_disable', id=comment.id, page=page) }}">Disable</a>
             {% endif %}
-                <a class="btn btn-info btn-xs" href="javascript:replycomment('{{ comment.id }}');">{{ _('Reply') }}</a>
+                {% if g.user.is_authenticated %}
+                    <a class="btn btn-info btn-xs" href="javascript:replycomment('{{ comment.id }}');">{{ _('Reply') }}</a>
+                {% endif %}
         {% else %}
-            <a class="btn btn-default btn-xs" href="javascript:replycomment('{{ comment.id }}');">{{ _('Reply') }}</a>
+            {% if g.user.is_authenticated %}
+                <a class="btn btn-default btn-xs" href="javascript:replycomment('{{ comment.id }}');">{{ _('Reply') }}</a>
+            {% endif %}
         {% endif %}
     </div>
 
@@ -18,7 +22,7 @@
             {{ replyform.hidden_tag() }}
             <div class="control-group{% if replyform.body.errors %} error{% endif %}">
                 <label class="control-label" for="body">{{ _('Comment:') }}</label>
-                <textarea id = "commentbox{{ comment.id }}" name="body"  maxlength=8000 class='expanding'></textarea>
+                <textarea id = "commentbox{{ comment.id }}" name="body"  maxlength=8000 class="expanding"></textarea>
                 <div class="controls">
                     {% for error in replyform.body.errors %}
                         <span class="help-inline">[{{ error }}]</span><br>
@@ -27,10 +31,30 @@
             </div>
             <div class="control-group">
                 <div class="controls">
+                    {% if g.user.is_authenticated %}
                     <input class="btn btn-primary" type="submit" value="{{ _('Publish') }}">
+                    {% endif %}
                 </div>
             </div>
         </form>
     </div>
+
+    {% if not g.user.is_authenticated %}
+
+    <button class="btn btn-sm btn-default" data-toggle="collapse" data-target="#replytoggle{{ comment.id }}">Reply</button>
+
+    <div id="replytoggle{{ comment.id }}" class="collapse">
+        <div class="social-buttons">
+            <a href="{{ url_for('login', continue_url=request.url) }}" class="btn btn-sm btn-success">{{ _('Sign in') }}</a> or
+            <a href="{{ url_for('register', continue_url=request.url) }}" class="btn btn-sm btn-info">{{ _('Sign up') }}</a>
+            <a href="{{ url_for('login', continue_url=request.url) }}"><i>in <strong>seconds</strong> to enable to <strong>reply</strong></i></a>
+            <!--
+            <a href="{{ url_for('oauth_authorize', provider='facebook') }}" class="btn btn-fb"><i class="fa fa-facebook"></i></a>
+            <a href="{{ url_for('oauth_authorize', provider='twitter') }}" class="btn btn-tw"><i class="fa fa-twitter"></i></a>
+            -->
+        </div>
+    </div>
+    {% endif %}
+
 
 

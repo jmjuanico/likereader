@@ -11,6 +11,7 @@ $(document).ready(function () {
 freeze panes
 ************************************************************************/
 
+/**
 $(document).scroll(function(e){
     var scrollTop = $(document).scrollTop();
     if(scrollTop > 0){
@@ -20,6 +21,8 @@ $(document).scroll(function(e){
         $('.navbar').removeClass('navbar-fixed-top').addClass('navbar-static-top');
     }
 });
+
+**/
 
 /***********************************************************************
 translates the posts if language vs post is not the same
@@ -72,10 +75,13 @@ function set_openid(openid, pr)
     form.elements['openid'].value = openid;
 }
 
+/***
 $(".nav li").on("click", function() {
     $(".nav li").removeClass("active");
     $(this).addClass("active");
 });
+
+**/
 
 /***********************************************
 facebook sharing sdk
