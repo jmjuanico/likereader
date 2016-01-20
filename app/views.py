@@ -39,9 +39,29 @@ def get_redirect_target():
 # redirects to the final url
 def redirect_back(endpoint, **values):
     target = request.form['next']
-    if not target or not is_safe_url(target):
+    if not target or not is_safe_url(target) or is_auth_page(target):
         target = url_for(endpoint, **values)
     return redirect(target)
+
+def is_auth_page(target):
+    if 'login' in target or 'register' in target or 'update' in target:
+        return True
+    else:
+        return False
+
+def retain_before_auth_page(target):
+    # initialize to None if does not exist yet
+    # using session as global variable reinitializes every view
+    try:
+        session['before_auth_page']
+    except:
+        session['before_auth_page'] = None
+
+    if not is_auth_page(target):
+        session['before_auth_page'] = target
+    else:
+        target = session['before_auth_page']
+    return target
 
 @app.route('/baselogin', methods=['GET', 'POST'])
 def baselogin():
@@ -64,6 +84,7 @@ def login():
     error = None
     form = LoginForm()
     next = get_redirect_target()
+    next = retain_before_auth_page(next)
     if request.method == 'POST':
         if request.form['submit'] == 'cancel':
             return redirect_back('index')
@@ -87,6 +108,7 @@ def register():
     error = None
     form = RegisterForm()
     next = get_redirect_target()
+    next = retain_before_auth_page(next)
     if request.method == 'POST':
         if request.form['submit'] == 'cancel':
             return redirect_back('index')
@@ -109,8 +131,8 @@ def register():
                 login_user(user)
                 flash('You were logged in. ', 'success')
 
-                # return redirect(url_for('index'))
                 return redirect_back('index')
+
             return render_template('register.html', form=form, error=error, next=next)
     return render_template('register.html', form=form, error=error, next=next)
 
@@ -119,6 +141,7 @@ def update():
     error = None
     form = UpdateForm()
     next = get_redirect_target()
+    next = retain_before_auth_page(next)
     if request.method == 'POST':
         if request.form['submit'] == 'cancel':
             return redirect_back('index')
@@ -135,8 +158,9 @@ def update():
                 else:
                     print 'else'
                     flash('Invalid username.', 'danger')
+
                     return redirect_back('index')
-                    # return redirect(url_for("register"))
+
             return render_template('update.html', form=form, error=error, next=next)
     return render_template('update.html', form=form, error=error, next=next)
 
