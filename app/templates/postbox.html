@@ -5,7 +5,7 @@
         <div class="control-group{% if postform.title.errors %} error{% endif %}">
 
             <label class="control-label" for="title">{{ _('Title:') }}</label>
-            <textarea name="title"  maxlength=500 class="expanding" rows=1></textarea>
+            <textarea name="title"  maxlength=500 class="expanding" rows=1>{{ postform.title.data or '' }}</textarea>
 
             <div class="controls">
                 {% for error in postform.title.errors %}
@@ -18,7 +18,7 @@
         <div class="control-group{% if postform.body.errors %} error{% endif %}">
 
             <label class="control-label" for="body">{{ _('Body:') }}</label>
-            <textarea name="body"  maxlength=10000 class="expanding"></textarea>
+            <textarea name="body"  maxlength=10000 class="expanding">{{ postform.body.data or '' }}</textarea>
 
             <div class="controls">
                 {% for error in postform.body.errors %}

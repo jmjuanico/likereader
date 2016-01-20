@@ -13,6 +13,7 @@
 {% include 'commentbox.html' %}
 {% include 'comment.html' %} 
 {% if pagination %} 
+
 {% import "macros.html" as macros %} 
 <div class="pagination">  
     {{ macros.pagination_widget(pagination, 'post', fragment='#comments', id=post.id) }}  

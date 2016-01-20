@@ -22,7 +22,7 @@
             {{ replyform.hidden_tag() }}
             <div class="control-group{% if replyform.body.errors %} error{% endif %}">
                 <label class="control-label" for="body">{{ _('Comment:') }}</label>
-                <textarea id = "commentbox{{ comment.id }}" name="body"  maxlength=8000 class="expanding"></textarea>
+                <textarea id = "commentbox{{ comment.id }}" name="body"  maxlength=8000 class="expanding">{{ replyform.body.data or '' }}</textarea>
                 <div class="controls">
                     {% for error in replyform.body.errors %}
                         <span class="help-inline">[{{ error }}]</span><br>

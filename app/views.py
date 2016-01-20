@@ -228,6 +228,7 @@ def random(page=1):
 # @login_required
 def index(page=1):
     form = PostForm()
+
     if form.validate_on_submit():
         language = guessLanguage(form.body.data)
         if language == 'UNKNOWN' or len(language) > 5:
@@ -243,6 +244,7 @@ def index(page=1):
         return redirect(url_for('index'))
     posts = Post.query.order_by(Post.timestamp.desc()).paginate(page, POSTS_PER_PAGE, False)
     # posts = Post.query.paginate(page, POSTS_PER_PAGE, False)
+
     return render_template('index.html',
                            title='Home',
                            postform=form,

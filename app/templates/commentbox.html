@@ -5,7 +5,7 @@
         <div class="control-group{% if commentform.body.errors %} error{% endif %}">
 
             <label class="control-label" for="body">{{ _('Comment:') }}</label>
-            <textarea name="body"  maxlength=8000 class="expanding"></textarea>
+            <textarea name="body"  maxlength=8000 class="expanding">{{ commentform.body.data or '' }}</textarea>
 
             <div class="controls">
                 {% for error in commentform.body.errors %}
