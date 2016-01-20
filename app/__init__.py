@@ -9,8 +9,10 @@ from flask.ext.mail import Mail
 from .momentjs import momentjs
 from flask.ext.babel import Babel, lazy_gettext
 from flask.ext.bcrypt import Bcrypt
+from flask.ext.mobility import Mobility
 
 app = Flask(__name__)
+Mobility(app)
 bcrypt = Bcrypt(app)
 app.config.from_object('config')
 db = SQLAlchemy(app)
