@@ -357,6 +357,10 @@ def before_request():
     g.locale = get_locale()
     g.search_form = SearchForm()
     g.login_form = LoginForm()
+    try:
+        g.adminflag = g.user.can(Permission.ADMINISTER)
+    except:
+        pass
 
 # This will record queries that are running too long based on the query timeout config
 # result will be added in the logger

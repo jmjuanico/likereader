@@ -41,6 +41,13 @@
 
     {% if not g.user.is_authenticated %}
 
+    <div class="social-buttons">
+        <a href="{{ url_for('login', continue_url=request.url) }}" class="btn btn-sm btn-success">{{ _('Sign in') }}</a> or
+        <a href="{{ url_for('register', continue_url=request.url) }}" class="btn btn-sm btn-info">{{ _('Sign up') }}</a>
+        <a href="{{ url_for('login', continue_url=request.url) }}"><i>in <strong>seconds</strong> to enable to <strong>reply</strong></i></a>
+    </div>
+
+    <!-- this is toggle style
     <button class="btn btn-sm btn-default" data-toggle="collapse" data-target="#replytoggle{{ comment.id }}">Reply</button>
 
     <div id="replytoggle{{ comment.id }}" class="collapse">
@@ -48,12 +55,13 @@
             <a href="{{ url_for('login', continue_url=request.url) }}" class="btn btn-sm btn-success">{{ _('Sign in') }}</a> or
             <a href="{{ url_for('register', continue_url=request.url) }}" class="btn btn-sm btn-info">{{ _('Sign up') }}</a>
             <a href="{{ url_for('login', continue_url=request.url) }}"><i>in <strong>seconds</strong> to enable to <strong>reply</strong></i></a>
-            <!--
-            <a href="{{ url_for('oauth_authorize', provider='facebook') }}" class="btn btn-fb"><i class="fa fa-facebook"></i></a>
-            <a href="{{ url_for('oauth_authorize', provider='twitter') }}" class="btn btn-tw"><i class="fa fa-twitter"></i></a>
-            -->
         </div>
     </div>
+    -->
+    <!---
+    <a href="{{ url_for('oauth_authorize', provider='facebook') }}" class="btn btn-fb"><i class="fa fa-facebook"></i></a>
+    <a href="{{ url_for('oauth_authorize', provider='twitter') }}" class="btn btn-tw"><i class="fa fa-twitter"></i></a>
+    --->
     {% endif %}
 
 

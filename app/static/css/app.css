@@ -3,19 +3,41 @@ this is for fixed navbar
 ******************************************************/
 body {
     position: relative;
+    padding-top: 65px;
 }
 
 /***************************************************
 comments style
 ****************************************************/
-div.comment-body div.comment-thumbnail {
+div.comment-container div.comment-thumbnail {
     float: left;
+    margin-right: 10px;
 }
+div.comment-container span.comment-author {
+    color: green;
+}
+
 div.comment-action {
     padding: 0px;
     margin: 0;
 }
 hr {margin: 0;}
+
+/***************************************************
+posts style
+****************************************************/
+div.post-container div.post-thumbnail {
+    float: left;
+    margin-right: 10px;
+}
+
+div.post-container div.post-author {
+    color: green;
+}
+.control-label {
+    color: grey !important;
+    font-weight: normal !important;
+}
 
 /***************************************************
 modals style; scrollable

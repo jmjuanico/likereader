@@ -1,23 +1,28 @@
 {% for comment in comments %}
     <hr/>
-    <div class="comment-body">
+    <div class="comment-container">
             <div class="comment-thumbnail">
                 <a href="{{ url_for('.user', username=comment.author.username) }}">
                     <img class="img-rounded profile-thumbnail" src="{{ comment.author.avatar(size=40) }}">
                 </a>
             </div>
-            <a href="{{ url_for('user', username=comment.author.username) }}">{{ comment.author.username }}</a>
-            <i>{{ momentjs(comment.timestamp).fromNow() }}</i>
-                {% if comment.disabled %}
-                <p><i>This comment has been disabled by a moderator.</i></p>
-                {% endif %}
-                {% if moderate or not comment.disabled %}
-                    {% if comment.body_html %}
-                        {{ comment.body_html | safe }}
-                    {% else %}
-                        {{ comment.body }}
+            <div>
+                    {% if comment.disabled %}
+                    <p class="comment-body"><i>This comment has been disabled by a moderator.</i>
                     {% endif %}
-                {% endif %}
+                    {% if moderate or not comment.disabled %}
+                        {% if comment.body_html %}
+                            {{ comment.body_html | safe }}
+                        {% else %}
+                            {{ comment.body }}
+                        {% endif %}
+                    {% endif %}
+                    <span class="comment-author">
+                    <a href="{{ url_for('user', username=comment.author.username) }}">{{ comment.author.username }}</a>
+                        commented
+                    <i>{{ momentjs(comment.timestamp).fromNow() }}</i></span>
+                    </p>
+            </div>
     </div>
     {% include 'replybox.html' %}
 {% endfor %}

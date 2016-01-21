@@ -12,6 +12,9 @@
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
         integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
+      <!-- for best fit on mobile; no zooming as well to make it stays fit on frame -->
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
       <!-- this is used for expanding textbox -->
       <script type="text/javascript" src="{{ url_for('static', filename='js/expanding.js') }}"></script>
 
@@ -157,9 +160,10 @@
       </div>
 </nav>
 
+  <!---
 <div class="divide-nav">
   <div class="container">
-    <!--<p class="divide-text">Some Text Here</p> -->
+    <p class="divide-text">Some Text Here</p>
     <ul class="nav navbar-nav">
 
         <li class = "active"><a href="#">Link</a></li>
@@ -184,13 +188,15 @@
   </div>
 </div>
 
+--->
+
 <div class="container">
-        <div class="row">
-            <div class="col-sm-4"></div>
-            <div class="col-sm-8">
-                {% block content %}{% endblock %}
-            </div>
+    <div class="row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-8">
+            {% block content %}{% endblock %}
         </div>
+    </div>
 </div>
 
 

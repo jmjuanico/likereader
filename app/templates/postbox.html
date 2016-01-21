@@ -4,7 +4,7 @@
 
         <div class="control-group{% if postform.title.errors %} error{% endif %}">
 
-            <label class="control-label" for="title">{{ _('Title:') }}</label>
+            <label class="control-label" for="title">{{ _('give it some title...') }}</label>
             <textarea name="title"  maxlength=500 class="expanding" rows=1>{{ postform.title.data or '' }}</textarea>
 
             <div class="controls">
@@ -17,7 +17,7 @@
 
         <div class="control-group{% if postform.body.errors %} error{% endif %}">
 
-            <label class="control-label" for="body">{{ _('Body:') }}</label>
+            <label class="control-label" for="body">{{ _('and share whatever below...') }}</label>
             <textarea name="body"  maxlength=10000 class="expanding">{{ postform.body.data or '' }}</textarea>
 
             <div class="controls">
@@ -38,6 +38,12 @@
 </div>
 
 {% if not g.user.is_authenticated %}
+    <div class="social-buttons">
+        <a href="{{ url_for('login', continue_url=request.url) }}" class="btn btn-sm btn-success">{{ _('Sign in') }}</a> or
+        <a href="{{ url_for('register', continue_url=request.url) }}" class="btn btn-sm btn-info">{{ _('Sign up') }}</a>
+        <a href="{{ url_for('login', continue_url=request.url) }}"><i>in <strong>seconds</strong> to enable to <strong>share</strong></i></a>
+    </div>
+<!---
 <button class="btn btn-sm btn-info" data-toggle="collapse" data-target="#posttoggle">{{ _('Publish') }}</button>
 
 <div id="posttoggle" class="collapse">
@@ -45,12 +51,13 @@
         <a href="{{ url_for('login', continue_url=request.url) }}" class="btn btn-sm btn-success">{{ _('Sign in') }}</a> or
         <a href="{{ url_for('register', continue_url=request.url) }}" class="btn btn-sm btn-info">{{ _('Sign up') }}</a>
         <a href="{{ url_for('login', continue_url=request.url) }}"><i>in <strong>seconds</strong> to enable to <strong>share</strong></i></a>
-
-        <!--
-        <a href="{{ url_for('oauth_authorize', provider='facebook') }}" class="btn btn-fb"><i class="fa fa-facebook"></i></a>
-        <a href="{{ url_for('oauth_authorize', provider='twitter') }}" class="btn btn-tw"><i class="fa fa-twitter"></i></a>
-        -->
     </div>
 </div>
+--->
+<!--
+<a href="{{ url_for('oauth_authorize', provider='facebook') }}" class="btn btn-fb"><i class="fa fa-facebook"></i></a>
+<a href="{{ url_for('oauth_authorize', provider='twitter') }}" class="btn btn-tw"><i class="fa fa-twitter"></i></a>
+-->
+
 {% endif %}
 
