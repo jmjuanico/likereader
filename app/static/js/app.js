@@ -8,7 +8,7 @@ $(document).ready(function () {
 });
 
 /***********************************************************************
-google analytics
+google analytics; new comment
 ************************************************************************/
 
 $(document).ready(function () {
