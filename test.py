@@ -74,7 +74,7 @@ class TestCase(unittest.TestCase):
         u1 = User(username='john', email='john@example.com')
         u2 = User(username='susan', email='susan@example.com')
         u3 = User(username='mary', email='mary@example.com')
-        u4 = User(username='david', email='david@example.com')
+        u4 = User(username='david', email='joey.juanico@traxtech.com')
         db.session.add(u1)
         db.session.add(u2)
         db.session.add(u3)
