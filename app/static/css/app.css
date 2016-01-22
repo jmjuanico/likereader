@@ -4,6 +4,21 @@ this is for fixed navbar
 body {
     position: relative;
     padding-top: 65px;
+    font-style: verdana !important;
+}
+a {
+    color: 0033CC;
+}
+
+/***************************************************
+auth tabs style
+****************************************************/
+
+.authtab {
+    margin-top: 5px;
+}
+.authtab a {
+    color: black;
 }
 
 /***************************************************
@@ -21,8 +36,10 @@ div.comment-action {
     padding: 0px;
     margin: 0;
 }
-hr {margin: 0;}
 
+div.comment-container {
+    margin-top: 10px;
+}
 /***************************************************
 posts style
 ****************************************************/
@@ -37,6 +54,10 @@ div.post-container div.post-author {
 div.post-container div.post-title * {
     color: 0033CC !important;
     font-weight: normal !important;
+}
+
+div.post-container {
+    margin-top: 20px;
 }
 
 .control-label {

@@ -42,9 +42,9 @@
     {% if not g.user.is_authenticated %}
 
     <div class="social-buttons">
-        <a href="{{ url_for('login', continue_url=request.url) }}" class="btn btn-sm btn-success">{{ _('Sign in') }}</a> or
-        <a href="{{ url_for('register', continue_url=request.url) }}" class="btn btn-sm btn-info">{{ _('Sign up') }}</a>
-        <a href="{{ url_for('login', continue_url=request.url) }}"><i>in <strong>seconds</strong> to enable to <strong>reply</strong></i></a>
+        <a href="{{ url_for('login', continue_url=request.url) }}" class="btn btn-xs btn-default">{{ _('Sign in') }}</a> or
+        <a href="{{ url_for('register', continue_url=request.url) }}" class="btn btn-xs btn-default">{{ _('Sign up') }}</a>
+        <!--<a href="{{ url_for('login', continue_url=request.url) }}"> it only takes seconds to signup and reply </a>-->
     </div>
 
     <!-- this is toggle style

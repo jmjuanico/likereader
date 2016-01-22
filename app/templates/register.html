@@ -75,8 +75,12 @@
                   <div class="form-group">
                       <button class="btn btn-success btn-lg-1 btn-block" name="submit" type="submit" value="register">Register</button>
                         <button class="btn btn-info btn-lg-1 btn-block" name="submit" type="submit" value="cancel">Continue as guest for now</button>
-                          <span class="pull-right"><a href="/login">Log In</a></span>
-                        <span class="pull-left"><a href="/update">Reset Password</a></span>
+
+                      <div class="authtab">
+                      <span class="pull-right btn btn-default btn-sm"><a href="/login">Log In</a></span>
+                        <span class="pull-left btn btn-default btn-sm"><a href="/update">Reset Password</a></span>
+                        </div>
+
                       <input type=hidden value="{{ next or '' }}" name=next>
 
                   </div>

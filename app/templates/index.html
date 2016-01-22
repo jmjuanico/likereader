@@ -2,7 +2,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h5>{{ _('Hi, %(username)s! feel free to share your thoughts...', username=g.user.username or 'friend') }}</h5>
+    <div class="title">{{ _('Hi, %(username)s! feel free to share your thoughts...', username=g.user.username or 'friend') }}</div>
 
     {% include 'postbox.html' %}
 

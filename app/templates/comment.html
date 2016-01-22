@@ -1,5 +1,4 @@
 {% for comment in comments %}
-    <hr/>
     <div class="comment-container">
             <div class="comment-thumbnail">
                 <a href="{{ url_for('.user', username=comment.author.username) }}">

@@ -34,15 +34,18 @@
                      </span>
             </div>
 
-
           <div class="form-group">
               <button class="btn btn-success btn-lg-1 btn-block" name="submit" type="submit" value="register">Reset password</button>
                 <button class="btn btn-info btn-lg-1 btn-block" name="submit" type="submit" value="cancel">Continue as guest for now</button>
-                  <span class="pull-right"><a href="/register">Register</a></span>
-                    <span class="pull-left"><a href="/login">Log In</a></span>
+
+              <div class="authtab">
+                  <span class="pull-right btn btn-default btn-sm"><a href="/register">Register</a></span>
+                    <span class="pull-left btn btn-default btn-sm"><a href="/login">Log In</a></span>
+                </div>
+
                 <input type=hidden value="{{ next or '' }}" name=next>
           </div>
-
+        </form>
       </div>
 
       <div class="modal-footer border-top: 0px;">

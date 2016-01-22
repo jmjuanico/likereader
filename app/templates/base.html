@@ -74,7 +74,6 @@
            </div>
        </div>
 
-
             {% if g.user.is_authenticated %}
                 <ul class="nav navbar-nav navbar-right">
                   <li><a href="{{ url_for('user', username=g.user.username) }}"><img src="{{ g.user.avatar(20) }}"/> {{ g.user.username }}</a></li>
