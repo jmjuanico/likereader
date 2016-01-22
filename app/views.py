@@ -19,7 +19,7 @@ from oauth import OAuthSignIn
 from decorators import permission_required, admin_required
 from app import bcrypt
 from token import generate_confirmation_token, confirm_token
-import json
+import json, os
 from urlparse import urlparse, urljoin
 
 # making sure no malicious redirect happens
@@ -493,9 +493,13 @@ def unfollow(username):
 @app.route('/search', methods=['POST'])
 # @login_required
 def search():
-    if not g.search_form.validate_on_submit():
+    if os.environ.get('HEROKU'):
+        flash('Sorry, search is not available just yet')
         return redirect(url_for('index'))
-    return redirect(url_for('search_results', query=g.search_form.search.data))
+    else:
+        if not g.search_form.validate_on_submit():
+            return redirect(url_for('index'))
+        return redirect(url_for('search_results', query=g.search_form.search.data))
 
 @app.route('/search_results/<query>')
 # @login_required
