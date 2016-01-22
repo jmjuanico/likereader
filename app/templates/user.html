@@ -15,10 +15,13 @@
         <p>{{ _('Followers:') }} {{ user.followers.count() - 1 }} | {{ _('Following:') }} {{ user.followed.count() - 1 }} |
         {% if user.id == g.user.id %}
             <a href="{{ url_for('edit') }}">{{ _('Edit your profile') }}</a>
-        {% elif not g.user.is_following(user) %}
-            <a href="{{ url_for('follow', username=user.username) }}">{{ _('Follow') }}</a>
-        {% else %}
-            <a href="{{ url_for('unfollow', username=user.username) }}">{{ _('Unfollow') }}</a>
+        {% endif %}
+        {% if g.user.is_authenticated %}
+            {% if not g.user.is_following(user) %}
+                <a href="{{ url_for('follow', username=user.username) }}">{{ _('Follow') }}</a>
+            {% else %}
+                <a href="{{ url_for('unfollow', username=user.username) }}">{{ _('Unfollow') }}</a>
+            {% endif %}
         {% endif %}
         </p>
     </div>

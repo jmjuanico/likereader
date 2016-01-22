@@ -34,6 +34,11 @@ div.post-container div.post-thumbnail {
 div.post-container div.post-author {
     color: green;
 }
+div.post-container div.post-title * {
+    color: 0033CC !important;
+    font-weight: normal !important;
+}
+
 .control-label {
     color: grey !important;
     font-weight: normal !important;
