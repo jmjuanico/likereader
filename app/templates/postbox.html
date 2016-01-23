@@ -1,64 +1,68 @@
-<div class="comment-form">
-    <form class="form-horizontal" action="" method="post" name="post">
-        {{ postform.hidden_tag() }}
 
-        <div class="control-group{% if postform.title.errors %} error{% endif %}">
+  <div class="row"> <!--#f8f8f8-->
+<div class="col-sm-12" style="background-color:#edfbfe;">
+    <div class="comment-form">
+        <form class="form-horizontal" action="" method="post" name="post">
+            {{ postform.hidden_tag() }}
 
-            <label class="control-label" for="title">{{ _('give it some title...') }}</label>
-            <textarea name="title"  maxlength=500 class="expanding" rows=1>{{ postform.title.data or '' }}</textarea>
+            <div class="control-group{% if postform.title.errors %} error{% endif %}">
 
-            <div class="controls">
-                {% for error in postform.title.errors %}
-                    <span class="help-inline">[{{ error }}]</span><br>
-                {% endfor %}
+                <label class="control-label" for="title">{{ _('give it some title...') }}</label>
+                <textarea name="title"  maxlength=500 class="expanding" rows=1>{{ postform.title.data or '' }}</textarea>
+
+                <div class="controls">
+                    {% for error in postform.title.errors %}
+                        <span class="help-inline">[{{ error }}]</span><br>
+                    {% endfor %}
+                </div>
+
             </div>
 
-        </div>
+            <div class="control-group{% if postform.body.errors %} error{% endif %}">
 
-        <div class="control-group{% if postform.body.errors %} error{% endif %}">
+                <label class="control-label" for="body">{{ _('and share whatever below...') }}</label>
+                <textarea name="body"  maxlength=10000 class="expanding">{{ postform.body.data or '' }}</textarea>
 
-            <label class="control-label" for="body">{{ _('and share whatever below...') }}</label>
-            <textarea name="body"  maxlength=10000 class="expanding">{{ postform.body.data or '' }}</textarea>
+                <div class="controls">
+                    {% for error in postform.body.errors %}
+                        <span class="help-inline">[{{ error }}]</span><br>
+                    {% endfor %}
+                </div>
 
-            <div class="controls">
-                {% for error in postform.body.errors %}
-                    <span class="help-inline">[{{ error }}]</span><br>
-                {% endfor %}
             </div>
-
-        </div>
-        <div class="control-group">
-            <div class="controls">
-                {% if g.user.is_authenticated %}
-                    <input class="btn btn-primary" type="submit" value="{{ _('Publish') }}">
-                 {% endif %}
+            <div class="control-group">
+                <div class="controls">
+                    {% if g.user.is_authenticated %}
+                        <input class="btn btn-primary" type="submit" value="{{ _('Publish') }}">
+                     {% endif %}
+                </div>
             </div>
-        </div>
-    </form>
-</div>
-
-{% if not g.user.is_authenticated %}
-    <div class="social-buttons">
-        <a href="{{ url_for('login', continue_url=request.url) }}" class="btn btn-sm btn-success">{{ _('Sign in') }}</a> or
-        <a href="{{ url_for('register', continue_url=request.url) }}" class="btn btn-sm btn-info">{{ _('Sign up') }}</a>
-        <a href="{{ url_for('login', continue_url=request.url) }}"> to enable to share. Trust me its fast and easy.</a>
+        </form>
     </div>
 
-<!---
-<button class="btn btn-sm btn-info" data-toggle="collapse" data-target="#posttoggle">{{ _('Publish') }}</button>
+    {% if not g.user.is_authenticated %}
+        <div class="social-buttons">
+            <a href="{{ url_for('login', continue_url=request.url) }}" class="btn btn-sm btn-success">{{ _('Sign in') }}</a> or
+            <a href="{{ url_for('register', continue_url=request.url) }}" class="btn btn-sm btn-info">{{ _('Sign up') }}</a>
+            <a href="{{ url_for('login', continue_url=request.url) }}"> to enable to share. Trust me its fast and easy.</a>
+        </div>
 
-<div id="posttoggle" class="collapse">
-    <div class="social-buttons">
-        <a href="{{ url_for('login', continue_url=request.url) }}" class="btn btn-sm btn-success">{{ _('Sign in') }}</a> or
-        <a href="{{ url_for('register', continue_url=request.url) }}" class="btn btn-sm btn-info">{{ _('Sign up') }}</a>
-        <a href="{{ url_for('login', continue_url=request.url) }}"><i>in <strong>seconds</strong> to enable to <strong>share</strong></i></a>
+    <!---
+    <button class="btn btn-sm btn-info" data-toggle="collapse" data-target="#posttoggle">{{ _('Publish') }}</button>
+
+    <div id="posttoggle" class="collapse">
+        <div class="social-buttons">
+            <a href="{{ url_for('login', continue_url=request.url) }}" class="btn btn-sm btn-success">{{ _('Sign in') }}</a> or
+            <a href="{{ url_for('register', continue_url=request.url) }}" class="btn btn-sm btn-info">{{ _('Sign up') }}</a>
+            <a href="{{ url_for('login', continue_url=request.url) }}"><i>in <strong>seconds</strong> to enable to <strong>share</strong></i></a>
+        </div>
+    </div>
+    --->
+    <!--
+    <a href="{{ url_for('oauth_authorize', provider='facebook') }}" class="btn btn-fb"><i class="fa fa-facebook"></i></a>
+    <a href="{{ url_for('oauth_authorize', provider='twitter') }}" class="btn btn-tw"><i class="fa fa-twitter"></i></a>
+    -->
+
+    {% endif %}
     </div>
 </div>
---->
-<!--
-<a href="{{ url_for('oauth_authorize', provider='facebook') }}" class="btn btn-fb"><i class="fa fa-facebook"></i></a>
-<a href="{{ url_for('oauth_authorize', provider='twitter') }}" class="btn btn-tw"><i class="fa fa-twitter"></i></a>
--->
-
-{% endif %}
-

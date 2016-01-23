@@ -12,7 +12,15 @@
         <div class="post-author text-lowercase">{{ _('%(username)s posted %(when)s:', username='<a href="%s">%s</a>' % (url_for('user', username=post.author.username), post.author.username), when=momentjs(post.timestamp).fromNow()) }}</div>
         {% endautoescape %}
 
-        <div class="post-body"><span id="post{{ post.id }}">{{ post.body }}</span></div>
+        <div class="post-body"><span id="post{{ post.id }}">
+
+            {% if post.body_html %}
+                {{ post.body_html | safe }}
+            {% else %}
+                {{ post.body }}
+            {% endif %}
+
+        </span></div>
 
         {% if post.language != None and post.language != '' and post.language != g.locale %}
         <div class="post-body-translated">

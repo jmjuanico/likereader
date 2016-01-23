@@ -1,11 +1,16 @@
 {{ _('Dear %(username)s,', username=user.username) }}
 
-{{ _('You have requested a change of your password. Please follow this link to proceed:') }}
-
-{{ confirm_update_url }}
+{% if confirm_update_url %}
+    {{ _('You have requested a change of your password. Please follow this link to proceed:') }}
+    {{ confirm_update_url }}">Click here to confirm.</a></p>
+{% endif %}
+{% if confirm_url %}
+    {{ _('Thank you for signing up! Please follow this link to activate your account:') }}
+    {{ confirm_url }}
+{% endif %}
 
 {{ _('Regards,') }}
 
-{{ _('The microblog admin') }}
+{{ _('LikeReader Admin') }}
 
 

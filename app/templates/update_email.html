@@ -1,18 +1,14 @@
 <p>Dear {{ user.username }},</p>
-<p> _('You have requested a change of your password. Please follow this link to proceed:')</p>
-<p> <a href="{{ confirm_update_url }}"> Click here to confirm. </a></p>
-
-<p>Welcome!</p>
 {% if confirm_update_url %}
-    <p>You have requested a change of your password. Please follow this link to proceed:</p>
-    <p><a href="{{ confirm_update_url }}">{{ confirm_update_url }}</a></p>
+    <p>{{ _('You have requested a change of your password. Please follow this link to proceed:') }}</p>
+    <p><a href="{{ confirm_update_url }}">Click here to confirm.</a></p>
 {% endif %}
 {% if confirm_url %}
-    <p>Thank you for signing up! Please follow this link to activate your account:</p>
-    <p><a href="{{ confirm_url }}">{{ confirm_url }}</a></p>
+    <p>{{ _('Thank you for signing up! Please follow this link to activate your account:') }}</p>
+    <p><a href="{{ confirm_url }}">Click here to confirm.</a></p>
 {% endif %}
 
 <p>{{ _('Regards,') }}</p>
-<p>{{ _('The <code>microblog</code> admin') }}</p>
+<p>{{ _('<code>LikeReader</code> Admin') }}</p>
 
 

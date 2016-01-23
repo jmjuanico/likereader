@@ -3,6 +3,8 @@ from hashlib import md5
 from app import app
 import re
 from config import WHOOSH_ENABLED
+import bleach
+from markdown import markdown
 
 import sys
 if sys.version_info >= (3, 0):
@@ -200,8 +202,19 @@ class Post(db.Model):
             db.session.add(p)
             db.session.commit()
 
+    @staticmethod
+    def on_changed_body(target, value, oldvalue, initiator):
+        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
+                        'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
+                        'h1', 'h2', 'h3', 'p', 'img']
+        target.body_html = bleach.linkify(bleach.clean(
+            markdown(value, output_format='html'),
+            tags=allowed_tags, strip=True))
+
     def __repr__(self):
         return '<Post %r>' % (self.body)
+
+db.event.listen(Post.body, 'set', Post.on_changed_body)
 
 class Comment(db.Model):
 
@@ -226,6 +239,16 @@ class Comment(db.Model):
         if not self.has_replied(comment):
             self.replied.append(comment)
             return self
+
+    @staticmethod
+    def on_changed_body(target, value, oldvalue, initiator):
+        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'code', 'em', 'i',
+                        'strong']
+        target.body_html = bleach.linkify(bleach.clean(
+            markdown(value, output_format='html'),
+            tags=allowed_tags, strip=True))
+
+db.event.listen(Comment.body, 'set', Comment.on_changed_body)
 
 if enable_search:
     whooshalchemy.whoosh_index(app, Post)
