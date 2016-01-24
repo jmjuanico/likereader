@@ -85,6 +85,7 @@ def login():
     form = LoginForm()
     next = get_redirect_target()
     next = retain_before_auth_page(next)
+    print request.method
     if request.method == 'POST':
         if request.form['submit'] == 'cancel':
             return redirect_back('index')
@@ -92,7 +93,7 @@ def login():
             if form.validate_on_submit():
                 session['remember_me'] = True
                 user = User.query.filter_by(username=form.username.data).first()
-                if user is not None:
+                if user:
                     if bcrypt.check_password_hash(str(user.password), str(form.password.data)):
                         login_user(user)
                         flash('You were logged in. ', 'success')
@@ -100,8 +101,14 @@ def login():
                     else:
                         flash('Invalid email or password.', 'danger')
                         return render_template('login.html', form=form, error=error)
-            return render_template('login.html', form=form, error=error, next=next)
-    return render_template('login.html', form=form, error=error, next=next)
+                else:
+                    flash('Invalid email or password.', 'danger')
+                    return render_template('login.html', form=form, error=error, next=next)
+            else:
+                flash('Invalid email or password.', 'danger')
+                return render_template('login.html', form=form, error=error, next=next)
+    else:
+        return render_template('login.html', form=form, error=error, next=next)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -122,19 +129,23 @@ def register():
                 db.session.add(user)
                 db.session.commit()
 
+                """"
                 if not form.email.data:
                     user=User.query.filter_by(username=form.username.data).first()
                     user.email = 'defaultemail_' + str(user.id) + '@gmail.com'
                     db.session.add(user)
                     db.session.commit()
+                """""
 
                 login_user(user)
                 flash('You were logged in. ', 'success')
 
                 return redirect_back('index')
-
-            return render_template('register.html', form=form, error=error, next=next)
-    return render_template('register.html', form=form, error=error, next=next)
+            else:
+                flash('Invalid email or password.', 'danger')
+                return render_template('register.html', form=form, error=error, next=next)
+    else:
+        return render_template('register.html', form=form, error=error, next=next)
 
 @app.route('/update', methods=['GET', 'POST'])   # pragma: no cover
 def update():
@@ -148,21 +159,22 @@ def update():
         else:
             if form.validate_on_submit():
                 user = User.query.filter_by(username=form.username.data).first()
-                if user is not None:
+                if user:
                     # creates and sends the token which contains the secret keys
                     token = generate_confirmation_token(user.email)
                     confirm_update_url = url_for('confirm_password', token=token, _external=True)
                     update_notification(user, confirm_update_url)
 
                     flash('A confirmation email has been sent.', 'success')
-                else:
-                    print 'else'
-                    flash('Invalid username.', 'danger')
-
                     return redirect_back('index')
-
-            return render_template('update.html', form=form, error=error, next=next)
-    return render_template('update.html', form=form, error=error, next=next)
+                else:
+                    flash('Invalid username.', 'danger')
+                    return render_template('update.html', form=form, error=error, next=next)
+            else:
+                flash('Invalid username.', 'danger')
+                return render_template('update.html', form=form, error=error, next=next)
+    else:
+        return render_template('update.html', form=form, error=error, next=next)
 
 # will be called from email
 @app.route('/confirm_password/<token>')
@@ -493,12 +505,14 @@ def unfollow(username):
 @app.route('/search', methods=['POST'])
 # @login_required
 def search():
+    print 'pre' + g.search_form.search.data
     if os.environ.get('HEROKU'):
         flash('Sorry, search is not available just yet')
         return redirect(url_for('index'))
     else:
         if not g.search_form.validate_on_submit():
             return redirect(url_for('index'))
+        print g.search_form.search.data
         return redirect(url_for('search_results', query=g.search_form.search.data))
 
 @app.route('/search_results/<query>')

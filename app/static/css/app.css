@@ -4,9 +4,11 @@
  * Slidebar (add to your bootstrap)
  */
 
+/**
 body{
   overflow-x: hidden;
 }
+**/
 
 .slidebar-form {
   padding: 7px 15px 13px 15px;
@@ -153,9 +155,7 @@ body{
   background-color: #888;
 }
 
-/*
- * White navbar style
- */
+/*** White navbar style ***/
 
 /*******
 #navbar-white.navbar-default {
@@ -213,29 +213,20 @@ this is for fixed navbar (TOP)
 ******************************************************/
 body {
     position: relative;
-    /*** padding-top: 65px; ***/
+    padding-top: 65px;
     font-style: verdana !important;
 }
 a {
     color: 0033CC;
 }
 
-
-.wrapper {min-width:500px;padding: 0 15px;background-color:#dddddd;}
+.wrapper {
+    min-width:500px;
+    padding: 0 15px;
+    background-color:#dddddd;
+}
 .navigation {position:fixed;}
 .content {background-color:#fff;}
-
-/***************************************************
-auth tabs style
-****************************************************/
-/***
-.authtab {
-    margin-top: 5px;
-}
-.authtab a {
-    color: black;
-}
-***/
 
 /***************************************************
 comments style
@@ -297,6 +288,9 @@ modals style; scrollable
     padding-bottom: 10px;
     padding-top: 0px;
 }
+#loginmodal {
+    position: relative;
+}
 
 /***************************************************
 text boxes formats
@@ -327,13 +321,6 @@ text boxes formats
     padding: 6px;
     margin: 0 auto;
 }
-
-/***
-* {
-   font-size: 12px;
-   line-height: 1.228;
-}
-***/
 
 /**************************************************
  login toggle
