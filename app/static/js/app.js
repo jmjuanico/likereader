@@ -1,3 +1,10 @@
+/***********************************************************************
+for the SIDEBAR
+************************************************************************/
+$(document).ready(function () {
+$("#menu-toggle").click(function(e){e.preventDefault();$("#wrapper").toggleClass("toggled");});
+});
+
 $(document).ready(function () {
     window.setTimeout(function() {
         $(".alert").fadeTo(1000, 0).slideUp(1000, function(){

@@ -7,19 +7,19 @@
   <div class="modal-content">
       <div class="modal-header">
           <!--<h1 class="text-center"><span class="glyphicon glyphicon-log-in"></span> Login</h1>-->
-          <h1 class="text-center"> Login</h1>
+            <div class="btn-group btn-group-justified" role="group" aria-label="true">
+              <a class="btn btn-default btn-sm" href="/register">Register</a>
+                <a class="btn btn-default btn-sm" href="/update">Reset Password</a>
+            </div>
+          <h4 class="text-center"> Login</h4>
       </div>
       <div class="modal-body">
 
-            Login directly via
-            <br><br>
             <div class="social-buttons text-center">
-                <a href="{{ url_for('oauth_authorize', provider='facebook') }}" class="btn btn-fb"><i class="fa fa-facebook"></i> Facebook</a>
-                <a href="{{ url_for('oauth_authorize', provider='twitter') }}" class="btn btn-tw"><i class="fa fa-twitter"></i> Twitter</a>
+                <a href="{{ url_for('oauth_authorize', provider='facebook') }}" class="btn btn-fb"><i class="fa fa-facebook"></i> via facebook</a>
+                <a href="{{ url_for('oauth_authorize', provider='twitter') }}" class="btn btn-tw"><i class="fa fa-twitter"></i> via twitter</a>
             </div>
-            <br>
-            or continue signing in...
-            <br><br>
+            <hr/>
 
           <form class="form center-block" name = 'form' role="form" method="post" action="{{ url_for('login') }}">
               {{ form.csrf_token }}
@@ -46,16 +46,17 @@
                      </span>
             </div>
               <div class="form-group">
-                  <button class="btn btn-success btn-lg-1 btn-block" name="submit" type="submit" value="signin">Sign In</button>
-                  <button class="btn btn-info btn-lg-1 btn-block" name="submit" type="submit" value="cancel">Continue as guest for now</button>
-
-                  <div class="authtab">
-                    <span class="pull-right btn btn-default btn-sm"><a href="/register">Register</a></span>
-                    <span class="pull-left btn btn-default btn-sm"><a href="/update">Reset Password</a></span>
-                  </div>
-
+                  <div class="btn-group btn-group-justified" role="group" aria-label="true">
+                    <div class="btn-group">
+                      <button class="btn btn-success" name="submit" type="submit" value="signin">Sign In</button>
+                        </div>
+                      <div class="btn-group">
+                      <button class="btn btn-info" name="submit" type="submit" value="cancel">Later</button>
+                          </div>
+                    </div>
                   <input type=hidden value="{{ next or '' }}" name=next>
               </div>
+
           </form>
       </div>
 

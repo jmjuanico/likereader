@@ -76,8 +76,8 @@ def baselogin():
                 flash('Oops! Sorry invalid username or password.', 'danger')
         else:
             flash('Oops! Sorry invalid username or password.', 'danger')
-    return redirect(url_for('index'))
-    # return redirect_back('index')
+    # return redirect(url_for('index'))
+    return redirect (request.referrer)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -197,10 +197,10 @@ def servicelogin():
                            providers=PROVIDERS)
 
 @app.route('/', methods=['GET', 'POST'])
-@app.route('/random', methods=['GET', 'POST'])
-@app.route('/random/<int:page>', methods=['GET', 'POST'])
+@app.route('/private', methods=['GET', 'POST'])
+@app.route('/private/<int:page>', methods=['GET', 'POST'])
 @login_required
-def random(page=1):
+def private(page=1):
     form = PostForm()
     if form.validate_on_submit():
         language = guessLanguage(form.body.data)
@@ -214,11 +214,11 @@ def random(page=1):
         db.session.add(post)
         db.session.commit()
         flash(gettext('Your post is now live!'))
-        return redirect(url_for('random'))
+        return redirect(url_for('private'))
     posts = g.user.followed_posts().paginate(page, POSTS_PER_PAGE, False)
-    return render_template('random.html',
-                           title='Home',
-                           form=form,
+    return render_template('private.html',
+                           title='Private Lounge',
+                           postform=form,
                            posts=posts,
                            pagination=posts)
 
@@ -246,7 +246,7 @@ def index(page=1):
     # posts = Post.query.paginate(page, POSTS_PER_PAGE, False)
 
     return render_template('index.html',
-                           title='Home',
+                           title='Public Lounge',
                            postform=form,
                            posts=posts,
                            pagination=posts)

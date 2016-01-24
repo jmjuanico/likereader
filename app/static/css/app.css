@@ -1,25 +1,241 @@
+
+/* CSS used here will be applied after bootstrap.css */
+/*
+ * Slidebar (add to your bootstrap)
+ */
+
+body{
+  overflow-x: hidden;
+}
+
+.slidebar-form {
+  padding: 7px 15px 13px 15px;
+}
+.slidebar-nav {
+  left: 250px;
+  list-style: none;
+  height: 100%;
+  margin: 0;
+  margin-left: -250px;
+  overflow-y: auto;
+  padding: 0;
+  position: fixed;
+  top: 50px;
+  width: 0;
+  z-index: 1000;
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+#wrapper.toggled .slidebar-nav {
+    width: 250px;
+}
+.slidebar-nav .navbar-collapse {
+  padding: 0;
+  max-height: none;
+}
+.slidebar-nav ul {
+  float: none;
+  width: 100%;
+}
+.slidebar-nav ul:not {
+  display: block;
+}
+.slidebar-nav li {
+  float: none;
+  display: block;
+}
+.slidebar-nav li a {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+.slidebar-nav .open .dropdown-menu {
+  position: static;
+  float: none;
+  width: auto;
+  margin: 0;
+  padding: 5px 0;
+  background-color: transparent;
+  border: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.slidebar-nav .open .dropdown-menu > li > a {
+  padding: 5px 15px 5px 25px;
+}
+.slidebar-nav .navbar-brand {
+  width: 100%;
+}
+.slidebar-nav .open > a > b.caret {
+  border-top: none;
+  border-bottom: 4px solid;
+}
+.slidebar-nav .navbar-nav {
+  margin: 0;
+}
+
+#wrapper {
+    padding-left: 0;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+#wrapper.toggled {
+    padding-left: 250px;
+}
+#page-wrapper6 {
+    width: 100%;
+    position: absolute;
+    padding: 15px;
+	top: 50px;
+}
+#wrapper.toggled #page-wrapper6 {
+    position: absolute;
+    margin-right: -250px;
+}
+@media(min-width:768px) {
+    #wrapper {
+        padding-left: 250px;
+    }
+    #wrapper.toggled {
+        padding-left: 0;
+    }
+    #page-wrapper6 {
+        padding: 20px;
+        position: relative;
+    }
+    #wrapper.toggled #page-wrapper6 {
+        position: relative;
+        margin-right: 0;
+    }
+	.slidebar-nav {
+		width: 250px;;
+	}
+	#wrapper.toggled .slidebar-nav {
+		width: 0;
+    }
+}
+
+.slidebar-toggle {
+  position: relative;
+  float: left;
+  padding: 9px 10px;
+  margin-top: 8px;
+  margin-left: 15px;
+  margin-bottom: 8px;
+  background-color: transparent;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+.slidebar-toggle:focus {
+  outline: 0;
+}
+.slidebar-toggle .icon-bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  border-radius: 1px;
+}
+.slidebar-toggle .icon-bar + .icon-bar {
+  margin-top: 4px;
+}
+.navbar-default .slidebar-toggle {
+  border-color: #ddd;
+}
+.navbar-default .slidebar-toggle:hover,
+.navbar-default .slidebar-toggle:focus {
+  background-color: #ddd;
+}
+.navbar-default .slidebar-toggle .icon-bar {
+  background-color: #888;
+}
+
+/*
+ * White navbar style
+ */
+
+/*******
+#navbar-white.navbar-default {
+    font-size: 14px;
+    background-color: rgba(255, 255, 255, 1);
+    background: -webkit-linear-gradient(top, rgba(239, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 100%);
+    background: linear-gradient(to bottom, rgba(239, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 100%);
+    border: 0px;
+	border-radius: 0;
+}
+
+#navbar-white.navbar-default .navbar-nav>li>a:hover,
+#navbar-white.navbar-default .navbar-nav>li>a:focus,
+#navbar-white.navbar-default .navbar-nav>li>ul>li>a:hover,
+#navbar-white.navbar-default .navbar-nav>li>ul>li>a:focus,
+#navbar-white.navbar-default .navbar-nav>.active>a,
+#navbar-white.navbar-default .navbar-nav>.active>a:hover,
+#navbar-white.navbar-default .navbar-nav>.active>a:focus {
+	color: rgba(51, 51, 51, 1);
+    background-color: rgba(255, 255, 255, 1);
+    background: -webkit-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 100%);
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 100%);
+}
+#sidebar-white, #column-white, #dashboard-white, #slidebar-white {
+	background-color: #efffff;
+}
+#navbar-white.navbar-default .navbar-toggle,
+#navbar-white.navbar-default .slidebar-toggle {
+    border-color: #ccffff;
+}
+#navbar-white.navbar-default .navbar-toggle:hover,
+#navbar-white.navbar-default .navbar-toggle:focus,
+#navbar-white.navbar-default .slidebar-toggle:hover,
+#navbar-white.navbar-default .slidebar-toggle:focus {
+    background-color: #ccffff;
+}
+#navbar-white.navbar-default .navbar-nav>li>a,
+#navbar-white.navbar-default .navbar-nav>li>ul>li>a,
+#navbar-white.navbar-default .navbar-brand {
+    color: #999999;
+}
+#navbar-white.navbar-default .navbar-toggle .icon-bar,
+#navbar-white.navbar-default .navbar-toggle:hover .icon-bar,
+#navbar-white.navbar-default .navbar-toggle:focus .icon-bar,
+#navbar-white.navbar-default .slidebar-toggle .icon-bar,
+#navbar-white.navbar-default .slidebar-toggle:hover .icon-bar,
+#navbar-white.navbar-default .slidebar-toggle:focus .icon-bar {
+    background-color: #cccccc;
+}
+***/
+
+
 /*****************************************************
-this is for fixed navbar
+this is for fixed navbar (TOP)
 ******************************************************/
 body {
     position: relative;
-    padding-top: 65px;
+    /*** padding-top: 65px; ***/
     font-style: verdana !important;
 }
 a {
     color: 0033CC;
 }
 
+
+.wrapper {min-width:500px;padding: 0 15px;background-color:#dddddd;}
+.navigation {position:fixed;}
+.content {background-color:#fff;}
+
 /***************************************************
 auth tabs style
 ****************************************************/
-
+/***
 .authtab {
     margin-top: 5px;
 }
 .authtab a {
     color: black;
 }
+***/
 
 /***************************************************
 comments style
@@ -73,6 +289,14 @@ modals style; scrollable
     max-height: calc(100vh - 212px);
     overflow-y: auto;
 }
+.modal-header {
+    padding-top: 10px;
+    padding-bottom: 0px;
+}
+.modal-footer {
+    padding-bottom: 10px;
+    padding-top: 0px;
+}
 
 /***************************************************
 text boxes formats
@@ -97,6 +321,7 @@ text boxes formats
 #message {
     padding: 0px;
     margin: 8 auto;
+    max-width: 300px;
 }
 #inner-message {
     padding: 6px;
@@ -115,14 +340,15 @@ text boxes formats
  *************************************************/
 
 #signintoggle {
-    margin: 8 auto;
+    margin: 5 auto;
 }
 
 #login-dp{
     min-width: 250px;
-    padding: 14px 14px 0;
+    padding: 0 14px 0;
     overflow:hidden;
-    background-color:rgba(255,255,255,.8);
+    /***background-color:rgba(255,255,255,.8); ***/
+    background-color: #f0f8ff;
 }
 #login-dp .help-block{
     font-size:12px
@@ -168,3 +394,4 @@ text boxes formats
         border-top:0 none;
     }
 }
+

@@ -1,0 +1,252 @@
+<html>
+  <head>
+    {% if title %}
+    <title>LikeReader-{{ title }}</title>
+    {% else %}
+    <title>LikeReader</title>
+    {% endif %}
+
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+      <!-- for best fit on mobile; no zooming as well to make it stays fit on frame -->
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+      <!-- this is used for expanding textbox -->
+      <script type="text/javascript" src="{{ url_for('static', filename='js/expanding.js') }}"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+      integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+      integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+      <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+
+    <!---<script src="/static/js/bootstrap.min.js"></script> -->
+    <!---<link href="/static/css/bootstrap.min.css" rel="stylesheet" media="screen">--->
+    <!---<link href="/static/css/bootstrap-responsive.min.css" rel="stylesheet">-->
+
+    <script src="{{ url_for('static', filename='js/moment.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <link rel="icon shortcut" href="{{ url_for('static', filename='img/favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+
+    {% if g.locale != 'en' %}
+    <script src="/static/js/moment-{{g.locale}}.min.js"></script>
+    {% endif %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  </head>
+ <body data-spy="scroll" data-target=".navbar" data-offset="50">
+
+  <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+
+
+    <div class="navbar-header">
+      <button href="#menu-toggle" class="slidebar-toggle" id="menu-toggle">
+        <span class="sr-only">Toggle sidebar</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <span><a class="navbar-brand" href="/">Slidebar</a></span>
+    </div>
+
+
+  <!--<div class="container"> -->
+
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{{ url_for('index') }}">LikeReader</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="navbar-collapse-1">
+
+    <form class="navbar-form navbar-left" role="search" action="{{ url_for('search') }}" method="post" name="search">
+    <div class="form-group">
+        {{ g.search_form.hidden_tag() }}
+        <input id="search" type="text" name="search" class="form-control" placeholder="{{ _('Search') }}">
+    </div>
+    <button type="submit" class="btn btn-info">Submit</button>
+  </form>
+
+       <div class="nav navbar-nav navbar-center text-center">
+           <div id = "message">
+                {% include 'flash.html' %}
+           </div>
+       </div>
+
+            {% if g.user.is_authenticated %}
+                <ul class="nav navbar-nav navbar-right">
+                  <li><a href="{{ url_for('user', username=g.user.username) }}"><img src="{{ g.user.avatar(20) }}"/> {{ g.user.username }}</a></li>
+                  <li><a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-in"></span> {{ _('Logout') }}</a></li>
+                </ul>
+            {% else %}
+        <!---
+                <form class="navbar-form navbar-right" name = 'form' role="form" method = "post" action = "{{ url_for('baselogin') }}">
+                    <span>| <a href="/register">Sign Up in seconds</a> | <a href="/update">Reset Password</a> |</span>
+                    {{ g.login_form.hidden_tag() }}
+                      <div class="form-group">
+                          <input type="text" class="form-control" name="username" placeholder="Username">
+                      </div>
+                      <div class="form-group">
+                          <input type="password" class="form-control" name="password" placeholder="Password">
+                      </div>
+                      <button type="submit" class="btn btn-info">Sign In</button>
+                  </form>
+          ---->
+
+            {% if request.MOBILE %}
+                <ul class="nav navbar-nav navbar-right">
+                     <li><p class="navbar-text"> It only takes <strong><em>seconds</em></strong> to
+                        <u><strong><a href="/register">Join Us</a></strong></u> or </p></li>
+                  <li><a href="{{ url_for('login') }}" class="btn btn-primary" role="button"> {{ _('Sign in') }}</a></li>
+                </ul>
+            {% else %}
+
+            <ul class="nav navbar-nav navbar-right">
+                    <li><p class="navbar-text"> It only takes <strong><em>seconds</em></strong> to
+                        <u><strong><a href="/register">Join Us</a></strong></u> or </p></li>
+                    <li class="dropdown">
+
+                          <button id="signintoggle" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Sign In
+                          <span class="caret"></span></button>
+
+                        <ul id="login-dp" class="dropdown-menu">
+                            <li>
+                                 <div class="row">
+                                        <div class="col-md-12">
+                                            Login via
+                                            <div class="social-buttons">
+                                                <a href="{{ url_for('oauth_authorize', provider='facebook') }}" class="btn btn-fb"><i class="fa fa-facebook"></i> Facebook</a>
+                                                <a href="{{ url_for('oauth_authorize', provider='twitter') }}" class="btn btn-tw"><i class="fa fa-twitter"></i> Twitter</a>
+                                            </div>
+                                            or
+                                             <form class="form" role="form" method="post" action="{{ url_for('baselogin') }}" accept-charset="UTF-8" id="login-nav">
+                                                    {{ g.login_form.hidden_tag() }}
+                                                    <div class="form-group">
+                                                         <label class="sr-only" for="username">Username</label>
+                                                         <input type="username" class="form-control" name="username" id="username" placeholder="Username" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                         <label class="sr-only" for="password">Password</label>
+                                                         <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
+                                                         <div class="help-block text-right"><a href="/update">Forget the password ?</a></div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                         <button type="submit" class="btn btn-primary btn-block">Sign in</button>
+                                                    </div>
+                                                    <div class="checkbox">
+                                                         <label>
+                                                         <input type="checkbox"> keep me logged-in
+                                                         </label>
+                                                    </div>
+                                             </form>
+                                        </div>
+                                        <div class="bottom text-center">
+                                            New here ? <a href="/register"><b>Join Us</b></a>
+                                        </div>
+                                 </div>
+                            </li>
+                        </ul>
+                    </li>
+            </ul>
+
+            {% endif %}
+
+            {% endif %}
+
+
+        </div>
+
+      <!--</div> -->
+</nav>
+
+
+    <div id="wrapper">
+        <!-- Sidebar -->
+	<div id="slidebar-white" class="slidebar-nav">
+      <nav id="navbar-white" class="navbar navbar-default" role="navigation">
+        <ul class="nav navbar-nav">
+          <li class="hidden-xs"><a class="navbar-brand" href="/">Slidebar</a></li>
+          <li class="sidebar-form">
+            <form class="input-group" border="0" id="af" name="af" role="search" action="/archive.php">
+                <input type="text" class="form-control" id="aa" name="aa" placeholder="Search">
+              <span class="input-group-btn">
+                <button type="submit" class="btn btn-md" id="as" name="as" value="Go"><i class="glyphicon glyphicon-search"></i></button>
+              </span>
+            </form>
+          </li>
+          <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-th-list"></i> Services <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a href="/">Carwashes</a></li>
+            <li><a href="/">Lapdances</a></li>
+            <li><a href="/">Musicals</a></li>
+            <li><a href="/">Tutorials</a></li>
+            <li><a href="/">Catering</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-tags"></i> Products <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a href="/">Books</a></li>
+            <li><a href="/">Leaflets</a></li>
+            <li><a href="/">CDs</a></li>
+            <li class="divider"></li>
+            <li class="dropdown-header">Merchandise</li>
+            <li><a href="/">Towels</a></li>
+            <li><a href="/">Flags</a></li>
+            <li><a href="/">Coffee Mugs</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-user"></i> Profile <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a href="/"><i class="glyphicon glyphicon-user"></i> Profile</a></li>
+            <li><a href="/"><i class="glyphicon glyphicon-plus"></i> Account</a></li>
+            <li><a href="/"><i class="glyphicon glyphicon-cog"></i> Settings</a></li>
+            <li><a href="/"><i class="glyphicon glyphicon-comment"></i> Notifications</a></li>
+          </ul>
+        </li>
+        </ul>
+      </nav><!--/.navbar -->
+    </div><!--/.sidebar-nav -->
+
+
+    <!-- Page Content -->
+    <main id="page-wrapper6">
+      <div class="container-fluid">
+        <div class="col-md-6">
+            {% block content %}{% endblock %}
+        </div>
+
+        <div class="col-md-6">
+            <!---adsense here -->
+        </div>
+      </div>
+    </main>
+  </div><!-- /#wrapper -->
+
+
+  </body>
+</html>

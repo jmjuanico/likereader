@@ -1,0 +1,19 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="title">{{ _('Hi, %(username)s! feel free to share your thoughts...', username=g.user.username or 'friend') }}</div>
+
+    {% include 'postbox.html' %}
+
+    {% for post in posts.items %}
+        {% include 'post.html' %}
+    {% endfor %}
+
+{% if pagination %}
+{% import "macros.html" as macros %}
+<div class="pagination">
+    {{ macros.pagination_widget(pagination, 'private') }}
+</div>
+{% endif %}
+{% endblock %}
