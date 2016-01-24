@@ -228,6 +228,19 @@ a {
 .content {background-color:#fff;}
 
 /***************************************************
+form styles
+****************************************************/
+.comment-form {
+    background-color: #f8f8f8;
+    border-style: solid black;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+
+/***************************************************
 comments style
 ****************************************************/
 div.comment-container div.comment-thumbnail {
@@ -260,6 +273,7 @@ div.post-container div.post-author {
 div.post-container div.post-title * {
     color: 0033CC !important;
     font-weight: normal !important;
+    margin-bottom: 1px;
 }
 
 div.post-container {
@@ -267,6 +281,11 @@ div.post-container {
 }
 
 .control-label {
+    color: grey !important;
+    font-weight: normal !important;
+}
+
+.post-invite {
     color: grey !important;
     font-weight: normal !important;
 }
@@ -338,8 +357,10 @@ text boxes formats
     min-width: 250px;
     padding: 0 14px 0;
     overflow:hidden;
+    background-color: #f8f8f8;
     /***background-color:rgba(255,255,255,.8); ***/
-    background-color: #f0f8ff;
+    /***background-color: #e7e7e7;***/
+    /**background-color: #f0f8ff;**/
 }
 #login-dp .help-block{
     font-size:12px

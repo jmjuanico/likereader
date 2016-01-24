@@ -1,6 +1,6 @@
 
-  <div class="row"> <!--#f8f8f8-->
-<div class="col-sm-12" style="background-color:#f0f8ff;">
+  <div class="row"> <!--#f8f8f8 style="background-color:#f8f8f8;"-->
+
     <div class="comment-form">
         <form class="form-horizontal" action="" method="post" name="post">
             {{ postform.hidden_tag() }}
@@ -43,7 +43,7 @@
     {% if not g.user.is_authenticated %}
         <div class="social-buttons">
             <a href="{{ url_for('login', continue_url=request.url) }}" class="btn btn-sm btn-success">{{ _('Sign in') }}</a> or
-            <a href="{{ url_for('register', continue_url=request.url) }}" class="btn btn-sm btn-info">{{ _('Sign up') }}</a>
+            <a href="{{ url_for('register', continue_url=request.url) }}" class="btn btn-sm btn-primary">{{ _('Sign up') }}</a>
             <a href="{{ url_for('login', continue_url=request.url) }}"> to enable to share. Trust me its fast and easy.</a>
         </div>
 
@@ -64,5 +64,5 @@
     -->
 
     {% endif %}
-    </div>
+
 </div>

@@ -65,19 +65,24 @@ def retain_before_auth_page(target):
 
 @app.route('/baselogin', methods=['GET', 'POST'])
 def baselogin():
+    print 'imhere'
     if g.login_form.validate_on_submit():
         user = User.query.filter_by(username=g.login_form.username.data).first()
         session['remember_me'] = True
-        if user is not None:
+        if user:
             if bcrypt.check_password_hash(str(user.password), str(g.login_form.password.data)):
                 login_user(user)
                 flash('Welcome ' + user.username + '! You are now logged in. ', 'success')
+                return redirect (request.referrer)
             else:
                 flash('Oops! Sorry invalid username or password.', 'danger')
+                return redirect (request.referrer)
         else:
             flash('Oops! Sorry invalid username or password.', 'danger')
-    # return redirect(url_for('index'))
-    return redirect (request.referrer)
+            return redirect (request.referrer)
+    else:
+        flash('Oops! Sorry invalid username or password.', 'danger')
+        return redirect (request.referrer)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
