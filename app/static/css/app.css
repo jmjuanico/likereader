@@ -4,11 +4,10 @@
  * Slidebar (add to your bootstrap)
  */
 
-/**
+
 body{
   overflow-x: hidden;
 }
-**/
 
 .slidebar-form {
   padding: 7px 15px 13px 15px;
@@ -213,7 +212,7 @@ this is for fixed navbar (TOP)
 ******************************************************/
 body {
     position: relative;
-    padding-top: 65px;
+    /***padding-top: 65px;***/
     font-style: verdana !important;
 }
 a {
@@ -288,9 +287,11 @@ modals style; scrollable
     padding-bottom: 10px;
     padding-top: 0px;
 }
+/**
 #loginmodal {
     position: relative;
 }
+**/
 
 /***************************************************
 text boxes formats
