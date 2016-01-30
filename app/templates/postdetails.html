@@ -10,13 +10,18 @@
 </div>
 
 {% include 'commentbox.html' %}
-{% include 'comment.html' %} 
-{% if pagination %} 
+{% for comment in comments %}
+    {% include 'comment.html' %} 
+    {% include 'replybox.html' %}
+{% endfor %}
 
-{% import "macros.html" as macros %} 
-<div class="pagination">  
-    {{ macros.pagination_widget(pagination, 'post', fragment='#comments', id=post.id) }}  
-</div>
+{% if pagination %} 
+    {% import "macros.html" as macros %} 
+    <div class="row">
+    <div class="pagination">  
+        {{ macros.pagination_widget(pagination, 'post', fragment='#comments', id=post.id) }}  
+    </div>
+    </div>
  {% endif %}
 
 {% endblock %}

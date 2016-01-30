@@ -214,6 +214,7 @@ body {
     position: relative;
     /***padding-top: 65px;***/
     font-style: verdana !important;
+    word-wrap: break-word;
 }
 a {
     color: 0033CC;
@@ -231,7 +232,7 @@ a {
 form styles
 ****************************************************/
 .comment-form {
-    background-color: #f8f8f8;
+    background-color: snow; /**#f8f8f8**/
     border-style: solid black;
     padding-top: 2px;
     padding-bottom: 2px;
@@ -239,26 +240,28 @@ form styles
     padding-right: 10px;
 }
 
-
 /***************************************************
 comments style
 ****************************************************/
-div.comment-container div.comment-thumbnail {
+div.comment-thumbnail {
     float: left;
     margin-right: 10px;
 }
-div.comment-container span.comment-author {
-    color: green;
+
+.comment-date {
+    color: grey;
+    font-size: 80%;
 }
 
 div.comment-action {
     padding: 0px;
-    margin: 0;
+    margin: 0px;
 }
 
 div.comment-container {
     margin-top: 10px;
 }
+
 /***************************************************
 posts style
 ****************************************************/
@@ -332,10 +335,11 @@ text boxes formats
 #message {
     position:fixed;
     top: 0px;
-    left: 0px;
-    width: 100%;
+    left: 50%;
+    transform: translate(-50%);
+    /**margin-left: -150px;**/
     margin: 8 auto;
-    /**max-width: 300px;**/
+    max-width: 300px;
     z-index:9999;
     border-radius:0px;
 }
@@ -358,9 +362,6 @@ text boxes formats
     padding: 0 14px 0;
     overflow:hidden;
     background-color: #f8f8f8;
-    /***background-color:rgba(255,255,255,.8); ***/
-    /***background-color: #e7e7e7;***/
-    /**background-color: #f0f8ff;**/
 }
 #login-dp .help-block{
     font-size:12px

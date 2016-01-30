@@ -244,29 +244,68 @@ def private(page=1):
 @app.route('/index/<int:page>', methods=['GET', 'POST'])
 # @login_required
 def index(page=1):
-    form = PostForm()
+    postform = PostForm()
 
-    if form.validate_on_submit():
-        language = guessLanguage(form.body.data)
+    if postform.validate_on_submit():
+        language = guessLanguage(postform.body.data)
         if language == 'UNKNOWN' or len(language) > 5:
             language = ''
-        post = Post(title = form.title.data,
-                    body=form.body.data,
+        post = Post(title = postform.title.data,
+                    body=postform.body.data,
                     timestamp=datetime.utcnow(),
                     author=g.user,
                     language=language)
         db.session.add(post)
         db.session.commit()
         flash(gettext('Your post is now live!'))
-        return redirect(url_for('index'))
-    posts = Post.query.order_by(Post.timestamp.desc()).paginate(page, POSTS_PER_PAGE, False)
-    # posts = Post.query.paginate(page, POSTS_PER_PAGE, False)
+        #return redirect(url_for('index'))
+
+    commentform = CommentForm()
+
+    if commentform.validate_on_submit():
+        comment = Comment(body=commentform.body.data,
+                          timestamp=datetime.utcnow(),
+                          post=post,
+                          author=current_user._get_current_object())
+        db.session.add(comment)
+        db.session.commit()
+        flash('Your comment has been published.')
+        #return redirect(url_for('post', id=post.id, page=-1))
+
+        #return redirect(url_for('index'))
+
+    replyform = ReplyForm()
+
+    if replyform.validate_on_submit():
+        user_url = url_for('user', username=user.username, _external=True)
+        reply = Comment(body_html= '<a href="' + user_url + '">@' + user.username + '</a> ' + replyform.body.data,
+                          timestamp=datetime.utcnow(),
+                          post=post,
+                          author=current_user._get_current_object())
+        db.session.add(reply)
+        db.session.flush()
+        r = comment.reply(reply)
+        db.session.add(r)
+        db.session.commit()
+
+        flash('Your comment has been published.')
+        #return redirect(url_for('index'))
+
+        commenturl = url_for('post', id=post.id, page=page, _external=True)
+        if user.email:
+            reply_notification(user, g.user, commenturl)
+        #return redirect(url_for('post', id=post.id, page=page))
+
+    posts = Post.query.order_by(Post.timestamp.desc())
+    postspagination = posts.paginate(page, POSTS_PER_PAGE, False)
 
     return render_template('index.html',
                            title='Public Lounge',
-                           postform=form,
-                           posts=posts,
-                           pagination=posts)
+                           postform=postform,
+                           commentform=commentform,
+                           replyform=replyform,
+                           posts=postspagination,
+                           pagination=postspagination)
 
 @app.route('/post/<int:id>', methods=['GET', 'POST'])
 # @login_required

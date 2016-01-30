@@ -5,7 +5,13 @@
     <h1>Comment Moderation</h1>
 </div>
 {% set moderate = True %}
-{% include 'comment.html' %}
+{% for comment in comments %}
+
+    {% include 'comment.html' %} 
+    {% include 'replybox.html' %}
+
+{% endfor %}
+
 
 {% if pagination %} 
 {% import "macros.html" as macros %} 

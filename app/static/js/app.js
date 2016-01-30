@@ -34,6 +34,7 @@ freeze panes; replaced by navbar bootstrap functionality
 ************************************************************************/
 
 /**
+
 $(document).scroll(function(e){
     var scrollTop = $(document).scrollTop();
     if(scrollTop > 0){
@@ -80,6 +81,49 @@ function replycomment(commentid){
         $("#comment" +commentid).hide();
     }
 }
+
+/************************************************************************
+when not login and reply button is click
+*************************************************************************/
+
+function commentauth(commentid){
+    if ($("#commentauthbox" + commentid).css('display') == 'none' ){
+        $("#commentauthbox" +commentid).show();
+        $("#commentauthbutton" +commentid).hide();
+    } else {
+        $("#commentauthbox" +commentid).hide();
+        $("#commentauthbutton" +commentid).show();
+    }
+}
+
+/************************************************************************
+when not login and reply button is click
+*************************************************************************/
+
+function replyauth(commentid){
+    if ($("#replyauthbox" + commentid).css('display') == 'none' ){
+        $("#replyauthbox" +commentid).show();
+        $("#replyauthbutton" +commentid).hide();
+    } else {
+        $("#replyauthbox" +commentid).hide();
+        $("#replyauthbutton" +commentid).show();
+    }
+}
+
+/************************************************************************
+when not login and post button is click
+*************************************************************************/
+
+function postauth(){
+    if ($("#postauthbox").css('display') == 'none' ){
+        $("#postauthbox").show();
+        $("#postauthbutton").hide();
+    } else {
+        $("#postauthbox").hide();
+        $("#postauthbutton").show();
+    }
+}
+
 
 /***********************************************************************
 used for openid

@@ -41,11 +41,20 @@
     </div>
 
     {% if not g.user.is_authenticated %}
+
+    <a id="postauthbutton" class="btn btn-default btn-xs" href="javascript:postauth();">{{ _('Publish') }}</a>
+    <div class="postauthbox" id="postauthbox" style="display: none;">
+        <a href="{{ url_for('login', continue_url=request.url) }}">{{ _('Sign in') }}</a> or
+        <a href="{{ url_for('register', continue_url=request.url) }}">{{ _('Sign up') }}</a> to comment
+    </div>
+
+      <!--
         <div class="social-buttons">
             <a href="{{ url_for('login', continue_url=request.url) }}" class="btn btn-sm btn-success">{{ _('Sign in') }}</a> or
             <a href="{{ url_for('register', continue_url=request.url) }}" class="btn btn-sm btn-primary">{{ _('Sign up') }}</a>
             <a href="{{ url_for('login', continue_url=request.url) }}"> to enable to share. Trust me its fast and easy.</a>
         </div>
+       -->
 
     <!---
     <button class="btn btn-sm btn-info" data-toggle="collapse" data-target="#posttoggle">{{ _('Publish') }}</button>

@@ -1,28 +1,45 @@
-{% for comment in comments %}
-    <div class="comment-container">
-            <div class="comment-thumbnail">
-                <a href="{{ url_for('.user', username=comment.author.username) }}">
-                    <img class="img-rounded profile-thumbnail" src="{{ comment.author.avatar(size=40) }}">
-                </a>
-            </div>
-            <div>
-                    {% if comment.disabled %}
-                    <p class="comment-body"><i>This comment has been disabled by a moderator.</i>
+
+<div class="comment-container">
+        <div class="comment-thumbnail">
+            <a href="{{ url_for('.user', username=comment.author.username) }}">
+                <img class="img-rounded profile-thumbnail" src="{{ comment.author.avatar(size=40) }}">
+            </a>
+        </div>
+        <div class="comment-author">
+            <a href="{{ url_for('user', username=comment.author.username) }}">{{ comment.author.username }}</a>
+            <span class="comment-date">{{ momentjs(comment.timestamp).fromNow() }}</span>
+        </div>
+        <div>
+                {% if comment.disabled %}
+                <p class="comment-body"><i>This comment has been disabled by a moderator.</i>
+                {% endif %}
+                {% if moderate or not comment.disabled %}
+                    {% if comment.body_html %}
+                        {{ comment.body_html | safe }}
+                    {% else %}
+                        {{ comment.body }}
                     {% endif %}
-                    {% if moderate or not comment.disabled %}
-                        {% if comment.body_html %}
-                            {{ comment.body_html | safe }}
-                        {% else %}
-                            {{ comment.body }}
-                        {% endif %}
-                    {% endif %}
-                    <span class="comment-author">
-                    <a href="{{ url_for('user', username=comment.author.username) }}">{{ comment.author.username }}</a>
-                        commented
-                    <i>{{ momentjs(comment.timestamp).fromNow() }}</i></span>
-                    </p>
-            </div>
-    </div>
-    {% include 'replybox.html' %}
-{% endfor %}
+                {% endif %}
+                </p>
+        </div>
+</div>
+
+<div class="comment-action">
+    {% if moderate %}
+        {% if comment.disabled %}
+            <a class="btn btn-success btn-xs" href="{{ url_for('moderate_enable', id=comment.id, page=page) }}">Enable</a>
+        {% else %}
+            <a class="btn btn-danger btn-xs" href="{{ url_for('moderate_disable', id=comment.id, page=page) }}">Disable</a>
+        {% endif %}
+            {% if g.user.is_authenticated %}
+                <a class="btn btn-info btn-xs" href="javascript:replycomment('{{ comment.id }}');">{{ _('Reply') }}</a>
+            {% endif %}
+    {% else %}
+        {% if g.user.is_authenticated %}
+            <a href="javascript:replycomment('{{ comment.id }}');">{{ _('Reply') }}</a>
+        {% endif %}
+    {% endif %}
+</div>
+
+
 

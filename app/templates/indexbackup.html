@@ -7,22 +7,13 @@
     {% include 'postbox.html' %}
 
     {% for post in posts.items %}
-
         {% include 'post.html' %}
-        {% include 'commentbox.html' %}
-        {% for comment in post.comments %}
-            {% include 'comment.html' %} 
-            {% include 'replybox.html' %}
-        {% endfor %}
-
     {% endfor %}
 
     {% if pagination %}
         {% import "macros.html" as macros %}
-        <div class="row">
-            <div class="pagination">
-                {{ macros.pagination_widget(pagination, 'index') }}
-            </div>
+        <div class="pagination">
+            {{ macros.pagination_widget(pagination, 'index') }}
         </div>
     {% endif %}
 {% endblock %}

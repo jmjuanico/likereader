@@ -27,28 +27,36 @@
 
 {% if not g.user.is_authenticated %}
 
-<div class="social-buttons">
-    <a href="{{ url_for('login', continue_url=request.url) }}" class="btn btn-sm btn-success">{{ _('Sign in') }}</a> or
-    <a href="{{ url_for('register', continue_url=request.url) }}" class="btn btn-sm btn-primary">{{ _('Sign up') }}</a>
-    <a href="{{ url_for('login', continue_url=request.url) }}"> to enable to comment. Trust me its fast and easy.</a>
-</div>
+    <a id="commentauthbutton{{ post.id }}" class="row" href="javascript:commentauth('{{ post.id }}');">{{ _('Comment') }}</a>
+    <div class="commentauthbox" id="commentauthbox{{ post.id }}" style="display: none;">
+        <a href="{{ url_for('login', continue_url=request.url) }}">{{ _('Sign in') }}</a> or
+        <a href="{{ url_for('register', continue_url=request.url) }}">{{ _('Sign up') }}</a> to comment
+    </div>
 
-<!--- this is a toggle style
-<button class="btn btn-sm btn-default" data-toggle="collapse" data-target="#commenttoggle">Comment</button>
-
-<div id="commenttoggle" class="collapse">
+    <!---
     <div class="social-buttons">
         <a href="{{ url_for('login', continue_url=request.url) }}" class="btn btn-sm btn-success">{{ _('Sign in') }}</a> or
-        <a href="{{ url_for('register', continue_url=request.url) }}" class="btn btn-sm btn-info">{{ _('Sign up') }}</a>
-        <a href="{{ url_for('login', continue_url=request.url) }}"><i>in <strong>seconds</strong> to enable to <strong>comment</strong></i></a>
+        <a href="{{ url_for('register', continue_url=request.url) }}" class="btn btn-sm btn-primary">{{ _('Sign up') }}</a>
+        <a href="{{ url_for('login', continue_url=request.url) }}"> to enable to comment. Trust me its fast and easy.</a>
     </div>
-</div>
---->
+    -->
 
-<!--
-<a href="{{ url_for('oauth_authorize', provider='facebook') }}" class="btn btn-fb"><i class="fa fa-facebook"></i></a>
-<a href="{{ url_for('oauth_authorize', provider='twitter') }}" class="btn btn-tw"><i class="fa fa-twitter"></i></a>
--->
+    <!--- this is a toggle style
+    <button class="btn btn-sm btn-default" data-toggle="collapse" data-target="#commenttoggle">Comment</button>
+
+    <div id="commenttoggle" class="collapse">
+        <div class="social-buttons">
+            <a href="{{ url_for('login', continue_url=request.url) }}" class="btn btn-sm btn-success">{{ _('Sign in') }}</a> or
+            <a href="{{ url_for('register', continue_url=request.url) }}" class="btn btn-sm btn-info">{{ _('Sign up') }}</a>
+            <a href="{{ url_for('login', continue_url=request.url) }}"><i>in <strong>seconds</strong> to enable to <strong>comment</strong></i></a>
+        </div>
+    </div>
+    --->
+
+    <!--
+    <a href="{{ url_for('oauth_authorize', provider='facebook') }}" class="btn btn-fb"><i class="fa fa-facebook"></i></a>
+    <a href="{{ url_for('oauth_authorize', provider='twitter') }}" class="btn btn-tw"><i class="fa fa-twitter"></i></a>
+    -->
 
 {% endif %}
 

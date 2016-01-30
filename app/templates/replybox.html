@@ -1,21 +1,4 @@
 
-    <div class="comment-action">
-        {% if moderate %}
-            {% if comment.disabled %}
-                <a class="btn btn-success btn-xs" href="{{ url_for('moderate_enable', id=comment.id, page=page) }}">Enable</a>
-            {% else %}
-                <a class="btn btn-danger btn-xs" href="{{ url_for('moderate_disable', id=comment.id, page=page) }}">Disable</a>
-            {% endif %}
-                {% if g.user.is_authenticated %}
-                    <a class="btn btn-info btn-xs" href="javascript:replycomment('{{ comment.id }}');">{{ _('Reply') }}</a>
-                {% endif %}
-        {% else %}
-            {% if g.user.is_authenticated %}
-                <a class="btn btn-default btn-xs" href="javascript:replycomment('{{ comment.id }}');">{{ _('Reply') }}</a>
-            {% endif %}
-        {% endif %}
-    </div>
-
     <!-- hide then show when button is clicked -->
     <div id = "comment{{ comment.id }}" class="comment-form" style="display: none;">
         <form class="form-horizontal" action="{{ url_for('comment', id=comment.id, page=page) }}" method="post" name="reply">
@@ -40,12 +23,19 @@
     </div>
 
     {% if not g.user.is_authenticated %}
+    <a id="replyauthbutton{{ comment.id }}" class="row" href="javascript:replyauth('{{ comment.id }}');">{{ _('Reply') }}</a>
+    <div class="replyauthbox" id="replyauthbox{{ comment.id }}" style="display: none;">
+        <a href="{{ url_for('login', continue_url=request.url) }}">{{ _('Sign in') }}</a> or
+        <a href="{{ url_for('register', continue_url=request.url) }}">{{ _('Sign up') }}</a> to comment
+    </div>
 
+    <!--
     <div class="social-buttons">
         <a href="{{ url_for('login', continue_url=request.url) }}" class="btn btn-xs btn-default">{{ _('Sign in') }}</a> or
         <a href="{{ url_for('register', continue_url=request.url) }}" class="btn btn-xs btn-default">{{ _('Sign up') }}</a>
-        <!--<a href="{{ url_for('login', continue_url=request.url) }}"> it only takes seconds to signup and reply </a>-->
+        <a href="{{ url_for('login', continue_url=request.url) }}"> it only takes seconds to signup and reply </a>
     </div>
+    -->
 
     <!-- this is toggle style
     <button class="btn btn-sm btn-default" data-toggle="collapse" data-target="#replytoggle{{ comment.id }}">Reply</button>
