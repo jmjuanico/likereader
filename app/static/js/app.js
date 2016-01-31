@@ -69,6 +69,12 @@ function translate(sourceLang, destLang, sourceId, destId, loadingId) {
     });
 }
 
+function deletepost(postid) {
+    $.post('/delete', {id: postid}).done(function(deletedpostid) {
+        $(post + string(deletedpostid)).remove();
+    });
+}
+
 /***********************************************************************
 shows up reply box when reply button is clicked
 ************************************************************************/

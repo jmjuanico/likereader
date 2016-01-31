@@ -156,7 +156,7 @@ body{
 
 /*** White navbar style ***/
 
-/*******
+/*****
 #navbar-white.navbar-default {
     font-size: 14px;
     background-color: rgba(255, 255, 255, 1);
@@ -204,7 +204,7 @@ body{
 #navbar-white.navbar-default .slidebar-toggle:focus .icon-bar {
     background-color: #cccccc;
 }
-***/
+****/
 
 
 /*****************************************************
@@ -337,7 +337,6 @@ text boxes formats
     top: 0px;
     left: 50%;
     transform: translate(-50%);
-    /**margin-left: -150px;**/
     margin: 8 auto;
     max-width: 300px;
     z-index:9999;
