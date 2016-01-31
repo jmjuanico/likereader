@@ -1,10 +1,4 @@
 
-/* CSS used here will be applied after bootstrap.css */
-/*
- * Slidebar (add to your bootstrap)
- */
-
-
 body{
   overflow-x: hidden;
 }
@@ -232,7 +226,7 @@ a {
 form styles
 ****************************************************/
 .comment-form {
-    background-color: snow; /**#f8f8f8**/
+    background-color: #f8f8f8;
     border-style: solid black;
     padding-top: 2px;
     padding-bottom: 2px;
@@ -243,6 +237,10 @@ form styles
 /***************************************************
 comments style
 ****************************************************/
+div.post-commentcontainer {
+    margin-left: 40px;
+}
+
 div.comment-thumbnail {
     float: left;
     margin-right: 10px;

@@ -35,11 +35,7 @@
 
         {% if post.author.id == g.user.id or g.adminflag %}
         <div class="post-action">
-            <!---
-            <a href="javascript:deletepost('{{ post.id }}');">{{ _('Delete') }}</a>
-            --->
             <a href="{{ url_for('delete', id=post.id) }}">{{ _('Delete') }}</a>
-
         </div>
         {% endif %}
 

@@ -1,10 +1,12 @@
+{% if g.user.is_authenticated %}
 <div class="comment-form">
     <form class="form-horizontal" action="" method="post" name="comment">
         {{ commentform.hidden_tag() }}
 
         <div class="control-group{% if commentform.body.errors %} error{% endif %}">
-                <label class="control-label" for="body">{{ _('Comment:') }}</label>
 
+
+                <label class="control-label" for="body">{{ _('Comment:') }}</label>
                 <textarea name="body"  maxlength=8000 class="expanding">{{ commentform.body.data or '' }}</textarea>
 
                 <div class="controls">
@@ -12,18 +14,17 @@
                         <span class="help-inline">[{{ error }}]</span><br>
                     {% endfor %}
                 </div>
+
         </div>
         <div class="control-group">
             <div class="controls">
-
-                {% if g.user.is_authenticated %}
                 <input class="btn btn-sm btn-primary" type="submit" value="{{ _('Publish') }}">
-                {% endif %}
-
             </div>
         </div>
     </form>
 </div>
+
+{% endif %}
 
 {% if not g.user.is_authenticated %}
 

@@ -11,8 +11,10 @@
         {% include 'post.html' %}
         {% include 'commentbox.html' %}
         {% for comment in post.comments %}
-            {% include 'comment.html' %} 
-            {% include 'replybox.html' %}
+            <div class="post-commentcontainer">
+                {% include 'comment.html' %} 
+                {% include 'replybox.html' %}
+            </div>
         {% endfor %}
 
     {% endfor %}
