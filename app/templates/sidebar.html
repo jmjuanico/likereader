@@ -1,0 +1,88 @@
+     <!-- Sidebar -->
+	<div id="slidebar-white" class="slidebar-nav">
+      <nav id="navbar-white" class="navbar navbar-default" role="navigation">
+        <ul class="nav navbar-nav">
+          <!--<li class="hidden-xs"><a class="navbar-brand" href="/">Slidebar</a></li>-->
+            <!--<li><a class="navbar-brand" href="/">Slidebar</a></li>-->
+
+            {% if g.user.is_authenticated %}
+                <li><a href="{{ url_for('user', username=g.user.username) }}"><img src="{{ g.user.avatar(30) }}"/> {{ g.user.username }}</a></li>
+            {% else %}
+
+            <li class="sidebar-form">
+
+              <button id="signintoggle" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                  <i class="glyphicon glyphicon-th-list"></i> Sign In
+              <span class="caret"></span></button>
+
+                <ul id="login-dp" class="dropdown-menu">
+                <li>
+                     <div class="row">
+                        <div class="col-md-12">
+                        <div class="social-buttons">
+                            <a href="{{ url_for('oauth_authorize', provider='facebook') }}" class="btn btn-fb"><i class="fa fa-facebook"></i> via facebook</a>
+                            <a href="{{ url_for('oauth_authorize', provider='twitter') }}" class="btn btn-tw"><i class="fa fa-twitter"></i> via twitter</a>
+                        </div>
+                         <form class="form" role="form" method="post" action="{{ url_for('baselogin') }}" accept-charset="UTF-8" id="login-nav">
+                                {{ g.login_form.hidden_tag() }}
+                                <div class="form-group">
+                                     <label class="sr-only" for="username">Username</label>
+                                     <input type="username" class="form-control" name="username" id="username" placeholder="Username" required>
+                                </div>
+                                <div class="form-group">
+                                     <label class="sr-only" for="password">Password</label>
+                                     <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
+                                     <div class="help-block text-right"><a href="/update">Forget your password ?</a></div>
+                                </div>
+                                <div class="form-group">
+                                     <button type="submit" class="btn btn-success btn-block">Sign in</button>
+                                    <a id="registersidebar" class="btn btn-primary btn-block" href="/register"><b>Sign up</b></a>
+                                </div>
+                         </form>
+                        </div>
+                     </div>
+                </li>
+                </ul>
+            </li>
+
+            {% endif %}
+
+          <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-th-list"></i> Pages <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a href="/index">Public</a></li>
+            <li><a href="/private">Private</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-tags"></i> Posts <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a href="/">User1</a></li>
+            <li><a href="/">User2</a></li>
+            <li class="divider"></li>
+            <li class="dropdown-header">Favorites</li>
+            <li><a href="/">User1</a></li>
+            <li><a href="/">User2</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+        {% if g.user.is_authenticated %}
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-user"></i> Profile <b class="caret"></b></a>
+        {% else %}
+            <a href="#" class="dropdown-toggle disabled" data-toggle="dropdown"><i class="glyphicon glyphicon-user"></i> Profile <b class="caret"></b></a>
+        {% endif %}
+          <ul class="dropdown-menu">
+            <li><a href="{{ url_for('user', username=g.user.username) }}"><i class="glyphicon glyphicon-user"></i> Profile</a></li>
+            <li><a href="/"><i class="glyphicon glyphicon-plus"></i> Account</a></li>
+            <li><a href="{{ url_for('edit') }}"><i class="glyphicon glyphicon-cog"></i> Settings</a></li>
+            <li><a href="/"><i class="glyphicon glyphicon-comment"></i> Notifications</a></li>
+            <li><a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-in"></span> {{ _('Logout') }}</a></li>
+          </ul>
+        </li>
+
+
+        </ul>
+      </nav><!--/.navbar -->
+    </div><!--/.sidebar-nav -->

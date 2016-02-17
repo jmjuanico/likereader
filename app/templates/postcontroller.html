@@ -1,0 +1,40 @@
+
+<div class="post-container" ng-controller="postController">
+    <table class="table table-bordered table-hover post">
+        <tr dir-paginate-start="p in posts | filter:searchtext | itemsPerPage: 10" pagination-id="postspagination">
+                <td colspan="2"><a ng-href="[[ p.post.url ]]">[[ p.post.title ]]</a></td>
+        </tr>
+        <tr><td colspan="2">
+                <span>posted by <a ng-href="[[ p.post.author ]]">[[ p.user.username ]]</a></span>
+                <span am-time-ago="p.post.timestamp | amDateFormat:'YYYY-MM-DD HH:mm:ss'"></span>
+            <span>[[ p.post.timestamp ]]</span>
+        </td></tr>
+
+         <tr>
+            <td>
+                <a ng-href="[[ p.user.url ]]">
+                    <img class="img-rounded profile-thumbnail" ng-src="[[ p.user.avatar_url ]]">
+                </a>
+            </td>
+            <td>[[ $sce.trustAsHtml(p.post.body_html) || p.post.body ]]</td>
+        </tr>
+        <tr dir-paginate-end>
+            <td colspan="2">
+                <div ng-include="'/angular/commentcontroller'"></div>
+            </td>
+        </tr>
+    </table>
+
+    <dir-pagination-controls pagination-id="postspagination" boundary-links="true"
+                             on-page-change="pageChangeHandler(newPageNumber)">
+    </dir-pagination-controls>
+
+</div>
+
+
+
+
+
+
+
+

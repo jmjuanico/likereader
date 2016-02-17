@@ -6,7 +6,7 @@ from flask.ext.login import LoginManager
 from flask.ext.openid import OpenID
 from config import basedir, ADMINS, MAIL_SERVER, MAIL_PORT, MAIL_USERNAME, MAIL_PASSWORD
 from flask.ext.mail import Mail
-from .momentjs import momentjs
+from momentjs import momentjs
 from flask.ext.babel import Babel, lazy_gettext
 from flask.ext.bcrypt import Bcrypt
 from flask.ext.mobility import Mobility
@@ -72,8 +72,9 @@ if os.environ.get('HEROKU') is not None:
     app.logger.setLevel(logging.INFO)
     app.logger.info('microblog startup')
 
+# initiliazes primary data and views
 app.jinja_env.globals['momentjs'] = momentjs
-from app import views, models
+from app import views, models, posts, users, comments, angular
 
 # make sure admin account is setup
 from models import User, Role, Permission

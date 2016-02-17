@@ -1,0 +1,30 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="post-invite">{{ _('Hi, %(username)s! feel free to share your anything...', username=g.user.username or 'friend') }}</div>
+
+    {% include 'postbox.html' %}
+
+    {% for post in posts.items %}
+
+        {% include 'post.html' %}
+        {% include 'commentbox.html' %}
+        {% for comment in post.comments %}
+            <div class="post-commentcontainer">
+                {% include 'comment.html' %} 
+                {% include 'replybox.html' %}
+            </div>
+        {% endfor %}
+
+    {% endfor %}
+
+    {% if pagination %}
+        {% import "macros.html" as macros %}
+        <div class="row">
+            <div class="pagination">
+                {{ macros.pagination_widget(pagination, 'index') }}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

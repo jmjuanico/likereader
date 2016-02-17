@@ -1,0 +1,71 @@
+
+ <div class="post-container" ng-controller="postController">
+    <table class="table table-bordered table-hover post">
+      <thead><tr ng-repeat-start="post in posts">
+                <th id="post[[ post.id ]]">
+                    <a href="{{ url_for('.user', username=[[ post.author.username ]]) }}">
+                    <img class="img-rounded profile-thumbnail" src="{{ [[ post.author.avatar(size=50) ]] }}"></a>
+                </th>
+                    <th><a href="{{ url_for('post', id = [[ post.id ]]) }}">[[ post.title ]]</a>
+                </th>
+      </tr></thead>
+      <tbody>
+            <tr><td></td></tr>
+            <tr><td>
+                <span><a href="{{ url_for('.user', username=[[ post.author.username ]]) }}">[[ post.author.avatar(size=50) ]]</a></span>
+                <span>{{ momentjs([[ post.timestamp ]]).fromNow() }} </span>
+            </td></tr>
+            <tr ng-repeat-end><td>
+                {% if [[ post.body_html ]] %}
+                    {{ [[ post.body_html ]] | safe }}
+                {% else %}
+                    {{ [[ post.body ]] }}
+                {% endif %}
+            </td></tr>
+      </tbody>
+    </table>
+</div>
+
+   <div class="container">
+    <div class="row">
+      <div class="col-lg-8">
+        <div ng-controller="MyController" class="my-controller">
+          <h1>Tasty Paginated Menu</h1>
+
+          <small>this is in "MyController"</small>
+
+
+          <div class="row">
+            <div class="col-xs-4">
+              <h3>Meals Page: {{ currentPage }}</h3>
+            </div>
+            <div class="col-xs-4">
+              <label for="search">Search:</label>
+              <input ng-model="q" id="search" class="form-control" placeholder="Filter text">
+            </div>
+            <div class="col-xs-4">
+              <label for="search">items per page:</label>
+              <input type="number" min="1" max="100" class="form-control" ng-model="pageSize">
+            </div>
+          </div>
+          <br>
+          <div class="panel panel-default">
+            <div class="panel-body">
+
+              <ul>
+                <li pagination-id="sample" dir-paginate="meal in meals | filter:q | itemsPerPage: pageSize" current-page="currentPage">[[ meal ]]</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div ng-controller="OtherController" class="other-controller">
+          <small>this is in "OtherController"</small>
+          <div class="text-center">
+          <dir-pagination-controls pagination-id="sample" boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)"></dir-pagination-controls>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+

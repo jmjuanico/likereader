@@ -1,0 +1,14 @@
+
+<div class="post-container" ng-controller="postboxController">
+  <span ng-show="title.$touched && title.$invalid">The name is required.</span>
+  <span ng-show="body.$touched && body.$invalid">The name is required.</span>
+
+<form ng-submit="submit()">
+  <textarea ng-model="title" maxlength=500 class="expanding" rows=1 placeholder="title"></textarea>
+  <textarea ng-model="body" maxlength=500 class="expanding" rows=1 placeholder="body">
+  </textarea>  <button type="submit" value="submit" class="btn-success btn-sm">Submit</button>
+</form>
+</div>
+
+
+

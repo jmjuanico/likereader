@@ -243,6 +243,14 @@ def private(page=1):
 @app.route('/index', methods=['GET', 'POST'])
 @app.route('/index/<int:page>', methods=['GET', 'POST'])
 # @login_required
+def index(page=1, rows=10):
+    return render_template('index.html')
+
+"""
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
+@app.route('/index/<int:page>', methods=['GET', 'POST'])
+# @login_required
 def index(page=1):
     postform = PostForm()
 
@@ -306,6 +314,8 @@ def index(page=1):
                            replyform=replyform,
                            posts=postspagination,
                            pagination=postspagination)
+
+"""
 
 @app.route('/post/<int:id>', methods=['GET', 'POST'])
 # @login_required
@@ -660,3 +670,4 @@ def moderate_disable(id):
     db.session.commit()
     return redirect(url_for('moderate',
                             page=request.args.get('page', 1, type=int)))
+

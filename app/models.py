@@ -5,6 +5,7 @@ import re
 from config import WHOOSH_ENABLED
 import bleach
 from markdown import markdown
+from flask import url_for
 
 import sys
 if sys.version_info >= (3, 0):
@@ -139,7 +140,8 @@ class User(db.Model):
         return self.followed.filter(followers.c.followed_id == user.id).count() > 0
 
     def followed_posts(self):
-        return Post.query.join(followers, (followers.c.followed_id == Post.user_id)).filter(followers.c.follower_id == self.id).order_by(Post.timestamp.desc())
+        return Post.query.join(followers, (followers.c.followed_id == Post.user_id))\
+            .filter(followers.c.follower_id == self.id).order_by(Post.timestamp.desc())
 
     # Here we just take the username and remove any characters that
     # are not letters, numbers, the dot or the underscore.
@@ -171,6 +173,19 @@ class User(db.Model):
 
     def is_administrator(self):
         return self.can(Permission.ADMINISTER)
+
+    def to_json(self, avatarsize=50):
+        json_user = {
+            'url': url_for('user', username=self.username, _external=True),
+            'username': self.username,
+            'last_seen': self.last_seen,
+            'avatar_url': self.avatar(avatarsize),
+            'posts': url_for('get_user_posts', id=self.id, _external=True),
+            'followed_posts': url_for('get_user_followed_posts',
+                                      id=self.id, _external=True),
+            'post_count': self.posts.count()
+        }
+        return json_user
 
     def __repr__(self):
         return '<User %r>' % (self.username)
@@ -211,6 +226,26 @@ class Post(db.Model):
             markdown(value, output_format='html'),
             tags=allowed_tags, strip=True))
 
+    def to_json(self):
+        json_post = {
+            'url': url_for('post', id=self.id, _external=True),
+            'title': self.title,
+            'body': self.body,
+            'body_html': self.body_html,
+            'timestamp': self.timestamp.strftime("%Y-%m-%dT%H:%M:%S Z"),
+            'author': url_for('get_user', id=self.user_id,
+                              _external=True),
+            'comments': url_for('get_post_comments', id=self.id,
+                                _external=True),
+            'comment_count': self.comments.count()
+        }
+        return json_post
+
+    @staticmethod
+    def from_json(json_post):
+        body = json_post.get('body')
+        return Post(body=body)
+
     def __repr__(self):
         return '<Post %r>' % (self.body)
 
@@ -223,7 +258,7 @@ class Comment(db.Model):
     body_html = db.Column(db.Text)
     timestamp = db.Column(db.DateTime)
     disabled = db.Column(db.Boolean)
-    author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
     replied = db.relationship('Comment',
                                secondary=replies,
@@ -247,6 +282,23 @@ class Comment(db.Model):
         target.body_html = bleach.linkify(bleach.clean(
             markdown(value, output_format='html'),
             tags=allowed_tags, strip=True))
+
+    def to_json(self):
+        json_comment = {
+            'url': url_for('get_comment', id=self.id, _external=True),
+            'post': url_for('get_post', id=self.post_id, _external=True),
+            'body': self.body,
+            'body_html': self.body_html,
+            'timestamp': self.timestamp,
+            'author': url_for('get_user', id=self.user_id,
+                              _external=True)
+        }
+        return json_comment
+
+    @staticmethod
+    def from_json(json_comment):
+        body = json_comment.get('body')
+        return Comment(body=body)
 
 db.event.listen(Comment.body, 'set', Comment.on_changed_body)
 

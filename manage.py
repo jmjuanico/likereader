@@ -1,32 +1,30 @@
-import os
-import psycopg2
-import urlparse
+from flask import jsonify, request, g, abort, url_for
+from app import app, db
+from app.models import Post, Permission
+from app.decorators import permission_required
+from app.errors import forbidden
 
-hardurl = "postgres://eftucjcsbhjhxo:6GJ7kzgFIhmgKYb041hVUdmYui@ec2-107-22-197-152.compute-1.amazonaws.com:5432/d1alnm3vi8kdem"
-urlparse.uses_netloc.append("postgres")
-# url = urlparse.urlparse(os.environ["DATABASE_URL"])
-url = urlparse.urlparse(hardurl)
+def get_posts():
+    rows = 10 # request.args.get('rows', 10, type=int)
+    page = 1 # request.args.get('page', 1, type=int)
+    pagination = Post.query.paginate(
+        page, per_page=rows,
+        error_out=False)
+    posts = pagination.items
+    prev = None
+    if pagination.has_prev:
+        prev = None # url_for('get_posts', page=page-1, _external=True)
+    next = None
+    if pagination.has_next:
+        next = None # url_for('get_posts', page=page+1, _external=True)
+    print posts
+    return jsonify({
+        'posts': [post.to_json() for post in posts],
+        'prev': prev,
+        'next': next,
+        'count': pagination.total
+    })
 
-"""
-print 'port: ' + str(url.port)
-print 'hostname: ' + url.hostname
-print 'hostname: ' + url.username
-print 'password: ' + url.password
-print 'database: ' + url.path[1:]
-"""
-
-conn = psycopg2.connect(
-    database=url.path[1:],
-    user=url.username,
-    password=url.password,
-    host=url.hostname,
-    port=url.port,
-    sslmode= 'require'
-)
-
-cur = conn.cursor()
-cur.execute("select * from post")
-results = cur.fetchall()
-print results
-for r in results:
-    print r
+letse = get_posts()
+for l in letse.posts:
+    print l
